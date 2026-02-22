@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NomNom — Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .welcome-banner {
+      background: var(--green);
+      color: var(--white);
+      padding: 2.5rem 2rem;
+      margin-bottom: 0;
+    }
+
+    .welcome-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .welcome-inner h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .welcome-inner p { opacity: 0.8; font-size: 0.95rem; }
+
+    .pace-pill {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* MAIN CARDS */
+    .main-cards {
+      max-width: 1100px;
+      margin: 2.5rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .big-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(45,80,22,0.07);
+      cursor: pointer;
+      transition: all 0.25s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .big-card:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-4px);
+    }
+
+    .big-card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .big-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--charcoal);
+      margin-bottom: 0.5rem;
+    }
+
+    .big-card p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.25rem; }
+
+    .big-card .balance-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 1rem;
+    }
+
+    .big-card .balance-amt {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .big-card .balance-label { font-size: 0.8rem; color: var(--gray); }
+
+    /* BOTTOM GRID */
+    .bottom-grid {
+      max-width: 1100px;
+      margin: 0 auto 2rem;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .activity-list { list-style: none; }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid rgba(45,80,22,0.06);
+    }
+
+    .activity-item:last-child { border-bottom: none; }
+
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--green-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .activity-icon.orange { background: var(--orange-light); }
+
+    .activity-text { flex: 1; }
+    .activity-text .name { font-size: 0.9rem; font-weight: 500; color: var(--charcoal); }
+    .activity-text .when { font-size: 0.78rem; color: var(--gray); }
+
+    .activity-amount { font-weight: 600; font-size: 0.95rem; }
+    .activity-amount.negative { color: #C0392B; }
+    .activity-amount.positive { color: var(--green); }
+
+    /* QUICK ACTIONS */
+    .quick-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .quick-btn {
+      display: block;
+      padding: 1rem;
+      background: var(--white);
+      border: 1.5px solid var(--gray-light);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      color: var(--charcoal);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .quick-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--green-muted);
+    }
+
+    @media (max-width: 768px) {
+      .main-cards { grid-template-columns: 1fr; }
+      .bottom-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><span>🥦</span> NomNom</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="start.html" class="active">Dashboard</a></li>
+      <li><a href="dining-dollars.html">Dining $</a></li>
+      <li><a href="swipes.html">Swipes</a></li>
+      <li><a href="food-good.html">Is Food Good?</a></li>
+      <li><a href="login.html" class="nav-cta">Sign In</a></li>
+    </ul>
+  </nav>
+
+  <!-- WELCOME BANNER -->
+  <div class="welcome-banner">
+    <div class="welcome-inner">
+      <div>
+        <h1>Good afternoon, Alex! 👋</h1>
+        <p>Here's how your dining plan is looking this week.</p>
+      </div>
+      <div class="pace-pill">🟢 On Pace — 61 days left in semester</div>
+    </div>
+  </div>
+
+  <!-- STAT GRID -->
+  <div class="page" style="padding-bottom:0;">
+    <div class="stat-grid fade-up">
+      <div class="stat-box">
+        <div class="label">Dining Dollars Left</div>
+        <div class="value">$342</div>
+        <div class="sub">of $600 starting balance</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Swipes Left</div>
+        <div class="value">47</div>
+        <div class="sub">of 80 total this semester</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Spent This Week</div>
+        <div class="value">$38</div>
+        <div class="sub">budget is $45/week</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Daily Pace</div>
+        <div class="value">$5.60</div>
+        <div class="sub">recommended to hit $0 at finals</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CARDS -->
+  <div class="main-cards">
+    <a href="dining-dollars.html" class="big-card fade-up">
+      <div class="big-card-icon">💵</div>
+      <h2>Dining Dollars</h2>
+      <p>Track your balance across restaurants, groceries, and on-campus dining. See your spending trends.</p>
+      <div class="progress-wrap">
+        <div class="progress-fill warn" style="width: 57%;"></div>
+      </div>
+      <div class="balance-row">
+        <div>
+          <div class="balance-label">Remaining</div>
+          <div class="balance-amt">$342</div>
+        </div>
+        <span class="badge badge-orange">57% used</span>
+      </div>
+    </a>
+
+    <a href="swipes.html" class="big-card fade-up-2">
+      <div class="big-card-icon">🔄</div>
+      <h2>Swipes</h2>
+      <p>Manage your weekly swipes, dining hall visits, and outtakes. Make every swipe count.</p>
+      <div class="progress-wrap">
+        <div class="progress-fill" style="width: 41%;"></div>
+      </div>
+      <div class="balance-row">
+        <div>
+          <div class="balance-label">Remaining</div>
+          <div class="balance-amt">47 left</div>
+        </div>
+        <span class="badge badge-green">On Track</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- BOTTOM GRID -->
+  <div class="bottom-grid">
+    <!-- RECENT ACTIVITY -->
+    <div class="card fade-up">
+      <h3 class="section-title">Recent Activity</h3>
+      <ul class="activity-list">
+        <li class="activity-item">
+          <div class="activity-icon">🍕</div>
+          <div class="activity-text">
+            <div class="name">Student Union Pizza</div>
+            <div class="when">Today, 12:34 PM</div>
+          </div>
+          <div class="activity-amount negative">-$9.50</div>
+        </li>
+        <li class="activity-item">
+          <div class="activity-icon orange">🔄</div>
+          <div class="activity-text">
+            <div class="name">Swipe — International Village</div>
+            <div class="when">Today, 8:10 AM</div>
+          </div>
+          <div class="activity-amount negative">-1 swipe</div>
+        </li>
+        <li class="activity-item">
+          <div class="activity-icon">🛒</div>
+          <div class="activity-text">
+            <div class="name">Star Market Groceries</div>
+            <div class="when">Yesterday, 5:45 PM</div>
+          </div>
+          <div class="activity-amount negative">-$24.12</div>
+        </li>
+        <li class="activity-item">
+          <div class="activity-icon">☕</div>
+          <div class="activity-text">
+            <div class="name">Dunkin' — Dining Dollars</div>
+            <div class="when">Yesterday, 9:00 AM</div>
+          </div>
+          <div class="activity-amount negative">-$5.25</div>
+        </li>
+        <li class="activity-item">
+          <div class="activity-icon orange">🔄</div>
+          <div class="activity-text">
+            <div class="name">Swipe — Stetson East</div>
+            <div class="when">Mon, 6:30 PM</div>
+          </div>
+          <div class="activity-amount negative">-1 swipe</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div>
+      <h3 class="section-title">Quick Actions</h3>
+      <div class="quick-actions">
+        <a href="food-good.html" class="quick-btn">⭐ Is Food Good Today?</a>
+        <a href="dining-dollars.html" class="quick-btn">💵 Log a Transaction</a>
+        <a href="swipes.html" class="quick-btn">🔄 Use a Swipe</a>
+        <a href="#" class="quick-btn">📊 View Spending Report</a>
+        <a href="#" class="quick-btn">🛒 Build Grocery List</a>
+        <a href="#" class="quick-btn">⚙️ Update Preferences</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 NomNom — Built with 🥦 for college students &nbsp;|&nbsp; <a href="#">Privacy</a> &nbsp;|&nbsp; <a href="#">Contact</a></p>
+  </footer>
+
+</body>
+</html>
