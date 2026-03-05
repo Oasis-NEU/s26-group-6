@@ -44,8 +44,6 @@
         linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
       background-size: 24px 24px;
-      will-change: transform;
-      transition: transform 0.3s ease-out;
     }
 
     .bg-scribbles-layer {
@@ -56,14 +54,6 @@
     .bg-scribbles-layer svg path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .bg-scribble-group { transition: opacity 1s ease; }
     .bg-scribble-group.fading { opacity: 0; }
-
-    .page-wrapper {
-      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      transform-origin: center top;
-    }
-    .page-wrapper.tilt-down { transform: perspective(1200px) rotateX(0.6deg) scale(0.998); }
-    .page-wrapper.tilt-up { transform: perspective(1200px) rotateX(-0.6deg) scale(0.998); }
-    .page-wrapper.btn-zoom { transform: scale(1.012); }
 
     .highlight-wrap { position: relative; display: inline; }
     .highlight-wrap .highlight-bg {
@@ -147,7 +137,6 @@
     .btn-lg { padding: 1rem 2.25rem; font-size: 1.05rem; }
 
     .btn-3d-wrap { perspective: 600px; display: inline-block; position: relative; }
-    .btn-3d-wrap:hover { }
     .btn-3d-wrap .btn {
       transition: transform 0.15s ease-out;
       transform-style: preserve-3d; will-change: transform;
@@ -157,6 +146,8 @@
     .scroll-section {
       opacity: 0; transform: translateY(40px) rotate(0.3deg);
       transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+      contain: layout style;
     }
     .scroll-section.visible { opacity: 1; transform: translateY(0) rotate(0deg); }
     .scroll-section:nth-child(even).visible { transform: translateY(0) rotate(-0.15deg); }
@@ -200,25 +191,88 @@
       transition: font-family 0.3s ease, transform 0.3s ease, color 0.3s ease;
       transform-origin: center bottom; min-width: 0.15em;
     }
-    .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
-    .nav-links a {
-      text-decoration: none; color: var(--gray); font-family: 'Chicle', sans-serif; font-size: 0.9rem;
-      font-weight: 500; transition: color 0.2s; position: relative;
+    .nav-links { display: none; }
+
+    .p5-menu-trigger {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--red); border: 3px solid var(--black);
+      cursor: pointer; position: relative; z-index: 1002;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease;
+      box-shadow: 2px 3px 0px var(--black);
+      padding: 0;
     }
-    .nav-links a::after {
-      content: ''; position: absolute; left: -2px; right: -2px; bottom: -2px;
-      height: 8px; background: var(--highlight); opacity: 0.6;
-      transform: scaleX(0); transform-origin: left;
-      transition: transform 0.3s ease; z-index: -1; border-radius: 3px 8px 2px 6px;
+    .p5-menu-trigger:hover { transform: scale(1.1); }
+    .p5-menu-trigger.open { background: var(--highlight); transform: scale(1.1); }
+
+    .p5-menu-trigger svg { width: 22px; height: 22px; display: block; }
+    .p5-menu-trigger svg path {
+      fill: none; stroke: var(--white); stroke-width: 2.2;
+      stroke-linecap: round; stroke-linejoin: round;
+      transition: d 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), stroke 0.3s ease;
     }
-    .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
-    .nav-links a:hover, .nav-links a.active { color: #000; }
-    .nav-cta {
-      background: var(--red); color: var(--white) !important;
-      padding: 0.5rem 1.25rem; border-radius: 50px;
+    .p5-menu-trigger.open svg path { stroke: var(--black); }
+    .p5-menu-trigger svg .morph-crust { d: path("M 3,5 C 8,5 16,5 21,5"); }
+    .p5-menu-trigger.open svg .morph-crust { d: path("M 3,5 C 7,1 17,1 21,5"); }
+    .p5-menu-trigger svg .morph-left { d: path("M 3,11 C 8,11 16,11 21,11"); }
+    .p5-menu-trigger.open svg .morph-left { d: path("M 12,21 C 10,16 6,10 3,5"); }
+    .p5-menu-trigger svg .morph-right { d: path("M 3,17 C 8,17 16,17 21,17"); }
+    .p5-menu-trigger.open svg .morph-right { d: path("M 12,21 C 14,16 18,10 21,5"); }
+
+    .p5-radial-backdrop {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.4); opacity: 0;
+      pointer-events: none; transition: opacity 0.35s ease;
     }
-    .nav-cta::after { display: none; }
-    .nav-cta:hover { background: #b82424; color: var(--white) !important; }
+    .p5-radial-backdrop.open { opacity: 1; pointer-events: all; }
+
+    .p5-radial-ring { position: fixed; z-index: 1001; pointer-events: none; }
+
+    .p5-radial-item {
+      position: absolute; transform-origin: center center;
+      opacity: 0; transform: scale(0.3) translate(0, 0);
+      pointer-events: none;
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    }
+    .p5-radial-item.visible { opacity: 1; pointer-events: all; }
+
+    .p5-radial-item a {
+      display: block; padding: 0.6rem 1.4rem;
+      background: var(--white); color: var(--black);
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+      letter-spacing: 0.08em; text-decoration: none;
+      border: 3px solid var(--black); border-radius: 8px;
+      box-shadow: 3px 4px 0px var(--black);
+      white-space: nowrap; position: relative; overflow: hidden;
+      transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    }
+    .p5-radial-item a:hover {
+      transform: scale(1.08) translateY(-2px);
+      background: var(--highlight);
+      box-shadow: 4px 6px 0px var(--black);
+    }
+    .p5-radial-item a:active {
+      transform: scale(0.97);
+      box-shadow: 1px 2px 0px var(--black);
+    }
+    .p5-radial-item.cta-item a { background: var(--red); color: var(--white); border-color: var(--black); }
+    .p5-radial-item.cta-item a:hover { background: #ff4545; }
+    .nav-signin {
+      display: inline-block; padding: 0.5rem 1.3rem;
+      background: var(--red); color: var(--white);
+      font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem;
+      letter-spacing: 0.06em; text-decoration: none;
+      border: 3px solid var(--black); border-radius: 8px;
+      box-shadow: 3px 4px 0px var(--black);
+      transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+      position: relative; z-index: 1002;
+    }
+    .nav-signin:hover {
+      transform: scale(1.06) translateY(-2px);
+      background: #ff4545;
+      box-shadow: 4px 6px 0px var(--black);
+    }
+    .nav-signin:active { transform: scale(0.97); box-shadow: 1px 2px 0px var(--black); }
 
     .hero {
       background: rgba(26, 26, 26, 0.82); color: var(--white);
@@ -350,7 +404,7 @@
       position: relative; z-index: 1; letter-spacing: 0.03em;
     }
 
-    .collage-section { background: var(--green-muted); padding: 4rem 2rem; }
+    .collage-section { background: var(--green-muted); padding: 4rem 2rem; contain: layout style; }
     .collage-inner {
       max-width: 1100px; margin: 0 auto;
       display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
@@ -397,7 +451,7 @@
     }
     .team-card p { font-family: 'Bebas Neue', sans-serif; font-size: 0.78rem; color: var(--gray); position: relative; z-index: 1; letter-spacing: 0.03em; }
 
-    .mission-section { background: var(--black); color: var(--white); text-align: center; padding: 4rem 2rem; }
+    .mission-section { background: var(--black); color: var(--white); text-align: center; padding: 4rem 2rem; contain: layout style; }
     .mission-inner { max-width: 620px; margin: 0 auto; }
     .mission-inner h2 { font-family: 'Bebas Neue', 'Playfair Display', sans-serif; font-size: 2rem; margin-bottom: 1rem; letter-spacing: 0.05em; }
     .mission-inner p { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; opacity: 0.85; line-height: 1.7; margin-bottom: 2rem; letter-spacing: 0.03em; }
@@ -509,7 +563,6 @@
 
     @media (max-width: 768px) {
       .collage-inner { grid-template-columns: 1fr; }
-      .nav-links { display: none; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
@@ -544,17 +597,27 @@
   </div>
   <nav id="navbar">
     <a href="#" class="nav-logo"><span></span> <span class="logo-letters"><span class="logo-char" data-offset="0">N</span><span class="logo-char" data-offset="1">o</span><span class="logo-char" data-offset="2">m</span><span class="logo-char" data-offset="3">N</span><span class="logo-char" data-offset="4">o</span><span class="logo-char" data-offset="5">m</span></span></a>
-    <ul class="nav-links">
-      <li><a href="#" class="active">Home</a></li>
-      <li><a href="#">Dashboard</a></li>
-      <li><a href="#">Dining $</a></li>
-      <li><a href="#">Swipes</a></li>
-      <li><a href="#">Is Food Good?</a></li>
-      <li><a href="#" class="nav-cta">Sign In</a></li>
-    </ul>
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <button class="p5-menu-trigger" id="p5Trigger" aria-label="Menu">
+        <svg viewBox="0 0 24 22" xmlns="http://www.w3.org/2000/svg">
+          <path class="morph-crust" />
+          <path class="morph-left" />
+          <path class="morph-right" />
+        </svg>
+      </button>
+      <a href="#" class="nav-signin">Sign In</a>
+    </div>
     <div class="wave-divider"><svg viewBox="0 0 1200 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 C200,18 400,18 600,10 C800,2 1000,2 1200,10 L1200,0 Z"/></svg></div>
   </nav>
-  <div class="page-wrapper" id="pageWrapper">
+  <div class="p5-radial-backdrop" id="p5Backdrop"></div>
+  <div class="p5-radial-ring" id="p5Ring">
+    <div class="p5-radial-item" data-idx="0"><a href="#">Home</a></div>
+    <div class="p5-radial-item" data-idx="1"><a href="#">Dashboard</a></div>
+    <div class="p5-radial-item" data-idx="2"><a href="#">Dining $</a></div>
+    <div class="p5-radial-item" data-idx="3"><a href="#">Swipes</a></div>
+    <div class="p5-radial-item" data-idx="4"><a href="#">Is Food Good?</a></div>
+  </div>
+  <div id="pageWrapper">
     <section class="hero">
       <div class="hero-content">
         <h1>Make your <em>dining plan</em> actually <span class="hero-red">work for you.</span></h1>
@@ -648,10 +711,8 @@
   </div>
 
   <script>
-    const wrapper = document.getElementById('pageWrapper');
     const nav = document.getElementById('navbar');
     const sections = document.querySelectorAll('.scroll-section');
-    const zoomBtns = document.querySelectorAll('.zoom-trigger');
     const cards3d = document.querySelectorAll('.card-3d');
     const btn3dWraps = document.querySelectorAll('.btn-3d-wrap');
     const sinePath = document.getElementById('sineWavePath');
@@ -663,15 +724,15 @@
       if (endX < 1) { sinePath.setAttribute('d', ''); return; }
       const phase = scrollY * 0.04;
       let d = 'M 0 0';
-      for (let x = 0; x <= endX; x += 2) {
+      for (let x = 0; x <= endX; x += 4) {
         const y = 4 + Math.sin(x * SINE_FREQ + phase) * SINE_AMP;
-        d += ` L ${x} ${y.toFixed(2)}`;
+        d += ` L ${x} ${y.toFixed(1)}`;
       }
       d += ` L ${endX} 0 Z`;
       sinePath.setAttribute('d', d);
     }
 
-    let lastScroll = 0, tiltTimeout, gridX = 0;
+    let lastScroll = 0;
 
     /* ═══ HALFTONE SHADOW ENGINE ═══ */
 
@@ -719,7 +780,6 @@
       const diagInv = 1 / Math.sqrt(w * w + h * h);
       const [r0,g0,b0] = GRAD_STOPS[0], [r1,g1,b1] = GRAD_STOPS[1], [r2,g2,b2] = GRAD_STOPS[2];
 
-      // Elliptical falloff: stretch shadow shape based on cursor position
       const sx = 1 / (spread * stretchX);
       const sy = 1 / (spread * stretchY);
 
@@ -1026,21 +1086,35 @@
       tNode.parentNode.replaceChild(frag, tNode);
     });
 
-    /* ═══ SCROLL HANDLERS ═══ */
+    /* ═══ SCROLL HANDLER — rAF-debounced, no wrapper transforms ═══ */
 
+    let scrollRAF = null;
     window.addEventListener('scroll', () => {
-      const y=window.scrollY, docH=document.documentElement.scrollHeight-window.innerHeight, dir=y-lastScroll;
-      updateSineWave(y/docH, y); gridX=y*0.08; document.body.style.setProperty('--grid-shift',`${gridX}px`);
-      const nearBottom=y>docH-50;
-      if(!nearBottom){if(dir>3){wrapper.classList.remove('tilt-up');wrapper.classList.add('tilt-down');}else if(dir<-3){wrapper.classList.remove('tilt-down');wrapper.classList.add('tilt-up');}}else{wrapper.classList.remove('tilt-down','tilt-up');}
-      clearTimeout(tiltTimeout); tiltTimeout=setTimeout(()=>wrapper.classList.remove('tilt-down','tilt-up'),300);
-      if(y>100){nav.classList.add('nav-shadow');if(dir>5)nav.classList.add('nav-hidden');else if(dir<-5)nav.classList.remove('nav-hidden');}else{nav.classList.remove('nav-shadow','nav-hidden');}
-      lastScroll=y;
+      if (scrollRAF) return;
+      scrollRAF = requestAnimationFrame(() => {
+        scrollRAF = null;
+        const y = window.scrollY;
+        const docH = document.documentElement.scrollHeight - window.innerHeight;
+        const dir = y - lastScroll;
+
+        updateSineWave(y / docH, y);
+
+        if (y > 100) {
+          nav.classList.add('nav-shadow');
+          if (dir > 5) nav.classList.add('nav-hidden');
+          else if (dir < -5) nav.classList.remove('nav-hidden');
+        } else {
+          nav.classList.remove('nav-shadow', 'nav-hidden');
+        }
+
+        lastScroll = y;
+      });
     }, { passive: true });
 
-    const gridStyle=document.createElement('style'); gridStyle.textContent=`body::before{background-position:var(--grid-shift,0px) 0px;}`; document.head.appendChild(gridStyle);
-    const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15}); sections.forEach(s=>io.observe(s));
-    zoomBtns.forEach(btn=>{btn.addEventListener('mouseenter',()=>wrapper.classList.add('btn-zoom'));btn.addEventListener('mouseleave',()=>wrapper.classList.remove('btn-zoom'));});
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    sections.forEach(s => io.observe(s));
 
     /* ═══ SETUP 3D WITH HALFTONE ═══ */
 
@@ -1051,9 +1125,8 @@
       let htCleanupTimer = null;
       const ht = createHalftoneCanvas(el);
       let htRAF = null;
-      let elW = 0, elH = 0; // real element dimensions
+      let elW = 0, elH = 0;
 
-      // Shadow state — target is where we want to be, current lerps toward it
       let htTarget = { cx: 0, cy: 0, intensity: 0, sx: 1, sy: 1 };
       let htCurrent = { cx: 0, cy: 0, intensity: 0, sx: 1, sy: 1 };
       let htActive = false;
@@ -1076,19 +1149,14 @@
         const pitch = -ny * maxTilt, yaw = nx * maxTilt;
         inner.style.transform = `perspective(600px) rotateX(${pitch}deg) rotateY(${yaw}deg) translateZ(${liftZ}px) scale(${scl})`;
 
-        // Physical shadow: card lifts toward cursor, shadow falls on opposite edge
-        // Shadow center = card center offset away from cursor, pushed past the card edge
         const w = ht.w || 100;
         const h = ht.h || 100;
         const dist = Math.sqrt(nx*nx + ny*ny);
         const clampDist = Math.min(dist, 1);
 
-        // Pad center = where the card sits in canvas space
         const padX = HALFTONE_PAD * CANVAS_SCALE;
         const padY = HALFTONE_PAD * CANVAS_SCALE;
 
-        // Shadow projects opposite the cursor, scaling with how far the cursor is from center
-        // At edges (dist~1), shadow center sits just past the opposite card edge
         const cardW = (elW * CANVAS_SCALE);
         const cardH = (elH * CANVAS_SCALE);
         htTarget.cx = w * 0.5 + (-nx * (cardW * 0.35 + padX * 0.5 * clampDist));
@@ -1102,7 +1170,6 @@
         inner.style.transition = 'transform 0.15s ease-out';
         if (emoji) emoji.style.opacity = emoji.dataset.opHover;
         if (!ht.sized) sizeCanvas(ht, el);
-        // Capture real element size
         const r = el.getBoundingClientRect();
         elW = r.width;
         elH = r.height;
@@ -1124,7 +1191,6 @@
         if (plopRAF) { cancelAnimationFrame(plopRAF); plopRAF = null; }
         if (emoji) emoji.style.opacity = emoji.dataset.opDefault;
 
-        // Fade out shadow back to center
         const w = ht.w || 100, h = ht.h || 100;
         htTarget.intensity = 0;
         htTarget.cx = w * 0.5;
@@ -1181,7 +1247,112 @@
         setTimeout(()=>{if(callback)callback();activeRAFs.forEach(id=>cancelAnimationFrame(id));activeRAFs=[];ripPieces.forEach(p=>{p.style.transition='none';p.style.opacity='0';p.style.transform='translateY(200vh)';});transitionOverlay.classList.remove('active');ripSnapshots.forEach(s=>{s.innerHTML='';});transitionRunning=false;},1400);
       });});
     }
-    document.querySelectorAll('.nav-links a, .btn').forEach(link=>{link.addEventListener('click',triggerPageTransition);});
+    document.querySelectorAll('.p5-radial-item a, .btn').forEach(link=>{link.addEventListener('click',triggerPageTransition);});
+
+    /* ═══ P5-STYLE RADIAL MENU ═══ */
+
+    const p5Trigger = document.getElementById('p5Trigger');
+    const p5Backdrop = document.getElementById('p5Backdrop');
+    const p5Ring = document.getElementById('p5Ring');
+    const p5Items = p5Ring.querySelectorAll('.p5-radial-item');
+    let p5Open = false;
+
+    /* ═══ P5 CONNECTOR WEDGES ═══ */
+    const p5ConnSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    p5ConnSvg.setAttribute('width', '500');
+    p5ConnSvg.setAttribute('height', '500');
+    p5ConnSvg.style.cssText = 'position:absolute;left:-250px;top:-250px;overflow:visible;pointer-events:none;z-index:-1;';
+    p5Ring.appendChild(p5ConnSvg);
+    const p5ConnPaths = [];
+    p5Items.forEach(() => {
+      const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      p.setAttribute('fill', '#1a1a1a');
+      p.setAttribute('stroke', '#D42B2B');
+      p.setAttribute('stroke-width', '2.5');
+      p.setAttribute('stroke-linejoin', 'round');
+      p.style.opacity = '0';
+      p.style.transition = 'opacity 0.3s ease';
+      p5ConnSvg.appendChild(p);
+      p5ConnPaths.push(p);
+    });
+
+    const P5_RADIUS = 150;
+    const P5_START_ANGLE = -15;
+    const P5_END_ANGLE = 115;
+    const P5_X_OFFSET = -40;
+    const P5_ITEM_COUNT = p5Items.length;
+
+    function positionRadialItems() {
+      const triggerRect = p5Trigger.getBoundingClientRect();
+      const originX = triggerRect.left + triggerRect.width / 2;
+      const originY = triggerRect.top + triggerRect.height / 2;
+
+      p5Ring.style.left = originX + 'px';
+      p5Ring.style.top = originY + 'px';
+
+      p5Items.forEach((item, i) => {
+        const angleDeg = P5_START_ANGLE + (P5_END_ANGLE - P5_START_ANGLE) * (i / (P5_ITEM_COUNT - 1));
+        const angleRad = angleDeg * Math.PI / 180;
+        const tx = -Math.cos(angleRad) * P5_RADIUS + P5_X_OFFSET;
+        const ty = Math.sin(angleRad) * P5_RADIUS;
+
+        if (p5Open) {
+          const yShift = (i === 0 ? 0 : -25) + 15;
+          item.style.transform = `translate(${tx}px, ${ty + yShift}px) scale(1) rotate(${(angleDeg * -0.15).toFixed(1)}deg)`;
+          item.style.transitionDelay = `${i * 0.06}s`;
+          item.classList.add('visible');
+        } else {
+          item.style.transform = `translate(0, 0) scale(0.3) rotate(${angleDeg * 0.3}deg)`;
+          item.style.transitionDelay = `${(P5_ITEM_COUNT - 1 - i) * 0.04}s`;
+          item.classList.remove('visible');
+        }
+
+        // Update connector wedge
+        const yShiftWedge = (i === 0 ? 0 : -25) + 15;
+        const txW = tx, tyW = ty + yShiftWedge;
+        const angle = Math.atan2(tyW, txW);
+        const dist = Math.sqrt(txW * txW + tyW * tyW);
+        const halfSpread = Math.atan2(44, dist);
+        const reach = dist - 5;
+        const cx = 250, cy = 250;
+        const x1 = cx + Math.cos(angle - halfSpread) * reach;
+        const y1 = cy + Math.sin(angle - halfSpread) * reach;
+        const x2 = cx + Math.cos(angle + halfSpread) * reach;
+        const y2 = cy + Math.sin(angle + halfSpread) * reach;
+        p5ConnPaths[i].setAttribute('d', `M ${cx},${cy} L ${x1.toFixed(1)},${y1.toFixed(1)} L ${x2.toFixed(1)},${y2.toFixed(1)} Z`);
+        if (p5Open) {
+          p5ConnPaths[i].style.opacity = '1';
+          p5ConnPaths[i].style.transitionDelay = `${i * 0.05}s`;
+        } else {
+          p5ConnPaths[i].style.opacity = '0';
+          p5ConnPaths[i].style.transitionDelay = `${(P5_ITEM_COUNT - 1 - i) * 0.03}s`;
+        }
+      });
+    }
+
+    function toggleP5Menu() {
+      p5Open = !p5Open;
+      p5Trigger.classList.toggle('open', p5Open);
+      p5Backdrop.classList.toggle('open', p5Open);
+      positionRadialItems();
+    }
+
+    function closeP5Menu() {
+      if (!p5Open) return;
+      p5Open = false;
+      p5Trigger.classList.remove('open');
+      p5Backdrop.classList.remove('open');
+      positionRadialItems();
+    }
+
+    p5Trigger.addEventListener('click', (e) => { e.stopPropagation(); toggleP5Menu(); });
+    p5Backdrop.addEventListener('click', closeP5Menu);
+    p5Items.forEach(item => {
+      item.querySelector('a').addEventListener('click', () => { closeP5Menu(); });
+    });
+
+    window.addEventListener('resize', () => { if (p5Open) positionRadialItems(); });
+    window.addEventListener('scroll', () => { if (p5Open) positionRadialItems(); }, { passive: true });
 
     /* ═══ INIT 3D ═══ */
 
