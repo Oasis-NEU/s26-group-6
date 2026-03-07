@@ -36,10 +36,6 @@ export default function Home() {
 
         <div className="relative z-10 max-w-6xl mx-auto px-6 py-28 md:py-36">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 bg-white/8 text-white/80 text-xs font-semibold tracking-wider uppercase mb-8 animate-fade-up backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              Built for college students
-            </div>
             <h1 className="font-display text-5xl md:text-7xl font-bold text-white leading-[1.08] tracking-tight mb-6 animate-fade-up-2">
               Make your<br />
               <span className="text-green-300 italic">dining plan</span><br />
