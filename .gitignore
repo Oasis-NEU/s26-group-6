@@ -30,3 +30,5 @@ __pycache__/
 .mypy_cache/
 *.pyc
 *.pyo
+.env
+backend/.venv/
