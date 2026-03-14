@@ -681,7 +681,7 @@ export default function Home() {
           <div className="collage-inner collage-inner--centered">
             <div className="collage-text">
               <h2>Our Mission</h2>
-              <p>College dining plans are expensive and confusing. Students consistently overspend early in the semester or waste money at the end. NomNom was built to change that, giving every student the clarity to eat well, spend wisely, and enjoy campus food without the stress.</p>
+              <p>College dining plans are expensive and confusing. Students consistently overspend early in the semester or waste money at the end. SwipeWise was built to change that, giving every student the clarity to eat well, spend wisely, and enjoy campus food without the stress.</p>
               <a href="/login" className="btn btn-primary zoom-trigger" data-route="/login"><span>Get Started Free</span></a>
             </div>
             {/* TODO: Replace with animation / illustration */}
@@ -702,7 +702,21 @@ export default function Home() {
                 'https://media.licdn.com/dms/image/v2/D4E03AQFWxHH13XN_7A/profile-displayphoto-scale_400_400/B4EZmXm7o_HgAg-/0/1759185190057?e=1775088000&v=beta&t=PYcA7VzyVnrAawpjznL6PNY_8zkcoQ9ygfVIXTCsH34',
                 'https://media.licdn.com/dms/image/v2/D4D03AQHlM6XilVj0jw/profile-displayphoto-shrink_800_800/B4DZaNiFawGcAs-/0/1746131245182?e=1775088000&v=beta&t=V0h5YemCBsG_16lYPC_kLnrZPG7kH8pixWJemi53gpg',
               ];
-              return <div key={n} className="card-3d"  data-tilt={tilts[i]} data-hue={hues[i]} data-sat={sats[i]} data-light={lights[i]}><div className="card-3d-inner team-card"><div className="team-avatar"><img src={photos[i]} alt={names[i]} /></div><h4><span className="highlight-wrap">{names[i]}<span className="highlight-bg"></span></span></h4><p>{roles[i]}</p></div></div>;
+              const githubs = [
+                'https://github.com/namanp07',
+                'https://github.com/CallumJ25',
+                'https://github.com/agandbhir123',
+                'https://github.com/tanmatalon',
+                'https://github.com/emanuel8006',
+              ];
+              const linkedins = [
+                'https://www.linkedin.com/in/naman-patel-6b8744382/',
+                'https://www.linkedin.com/in/callum-johnson-a9a15a235/',
+                'https://www.linkedin.com/in/aarav-gandbhir-157902304/',
+                'https://www.linkedin.com/in/tanmatalon/',
+                'https://www.linkedin.com/in/emanuel-galindo-garcia-657901354/',
+              ];
+              return <div key={n} className="card-3d"  data-tilt={tilts[i]} data-hue={hues[i]} data-sat={sats[i]} data-light={lights[i]}><div className="card-3d-inner team-card"><div className="team-avatar"><img src={photos[i]} alt={names[i]} /></div><h4><span className="highlight-wrap">{names[i]}<span className="highlight-bg"></span></span></h4><p>{roles[i]}</p><div className="team-socials"><a href={githubs[i]} target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a><a href={linkedins[i]} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></div></div>;
             })}
           </div>
         </section>
@@ -714,7 +728,7 @@ export default function Home() {
           </div>
         </section>
         <footer className="scroll-section">
-          <p>© 2026 NomNom &nbsp;|&nbsp; <a href="#">Contact</a></p>
+          <p>© 2026 SwipeWise &nbsp;|&nbsp; <a href="#">Contact</a></p>
         </footer>
       </div>
     </div>

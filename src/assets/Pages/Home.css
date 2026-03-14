@@ -142,6 +142,11 @@ nav .wave-divider{z-index:1001}
 .team-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .team-card h4{font-size:0.85rem;font-weight:600;color:var(--charcoal);margin-bottom:0.2rem;position:relative;z-index:1;white-space:nowrap}
 .team-card p{font-family:'Bebas Neue',sans-serif;font-size:0.78rem;color:var(--gray);position:relative;z-index:1;letter-spacing:0.03em}
+.team-socials{display:flex;gap:0.35rem;justify-content:center;margin-top:0.4rem;position:relative;z-index:1}
+.team-socials a{width:18px;height:18px;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:transform 0.2s ease}
+.team-socials a:hover{transform:scale(1.2)}
+.team-socials svg{width:13px;height:13px;fill:var(--black);transition:fill 0.2s ease}
+.team-socials a:hover svg{fill:var(--red)}
 .team-section .card-3d{--dock-scale:1;--dock-lift:0px;transform:scale(var(--dock-scale)) translateY(var(--dock-lift));transition:transform 0.15s ease-out;transform-origin:center bottom}
 .team-section .card-3d{--dock-scale:1;--dock-lift:0px;transform:scale(var(--dock-scale)) translateY(var(--dock-lift));transition:transform 0.15s ease-out;transform-origin:center bottom}
 .mission-section{background:var(--black);color:var(--white);text-align:center;padding:4rem 2rem;contain:layout style}

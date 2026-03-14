@@ -11,7 +11,7 @@ export default function Nav() {
 
   return (
     <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 2rem', background: '#FBF2D8', borderBottom: '1px solid rgba(0,0,0,0.08)' }}>
-      <a href="/" onClick={e => handleClick(e, '/')} style={{ fontFamily: "'Chicle', serif", fontSize: '1.4rem', fontWeight: 700, color: '#1a1a1a', textDecoration: 'none' }}>NomNom</a>
+      <a href="/" onClick={e => handleClick(e, '/')} style={{ fontFamily: "'Chicle', serif", fontSize: '1.4rem', fontWeight: 700, color: '#1a1a1a', textDecoration: 'none' }}>SwipeWise</a>
       <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
         <a href="/dashboard" onClick={e => handleClick(e, '/dashboard')} style={{ textDecoration: 'none', color: '#1a1a1a', fontFamily: "'Bebas Neue', sans-serif" }}>Dashboard</a>
         <a href="/dining-dollars" onClick={e => handleClick(e, '/dining-dollars')} style={{ textDecoration: 'none', color: '#1a1a1a', fontFamily: "'Bebas Neue', sans-serif" }}>Dining $</a>
