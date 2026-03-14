@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cream font-sans text-charcoal antialiased;
+  }
+  * {
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  /* ── Pencil sketch-in: light stroke → fill → sharpen ── */
+  .animate-fade-up {
+    animation:
+      sketchReveal 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) both,
+      sketchSharpen 0.6s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .animate-fade-up-2 {
+    animation:
+      sketchReveal 0.8s 0.1s cubic-bezier(0.22, 0.61, 0.36, 1) both,
+      sketchSharpen 0.6s 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .animate-fade-up-3 {
+    animation:
+      sketchReveal 0.8s 0.2s cubic-bezier(0.22, 0.61, 0.36, 1) both,
+      sketchSharpen 0.6s 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .animate-fade-up-4 {
+    animation:
+      sketchReveal 0.8s 0.3s cubic-bezier(0.22, 0.61, 0.36, 1) both,
+      sketchSharpen 0.6s 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .animate-fade-up-5 {
+    animation:
+      sketchReveal 0.8s 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both,
+      sketchSharpen 0.6s 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .glass {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.6);
+  }
+
+  .glass-dark {
+    background: rgba(26,46,13,0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .text-balance { text-wrap: balance; }
+
+  .noise::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    border-radius: inherit;
+  }
+}
+
+/* ── Pass 1: Reveal left-to-right like a light pencil stroke ── */
+@keyframes sketchReveal {
+  0% {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+    filter: blur(2px);
+  }
+  15% {
+    opacity: 0.25;
+    filter: blur(1.5px);
+  }
+  50% {
+    opacity: 0.4;
+    filter: blur(0.8px);
+  }
+  100% {
+    clip-path: inset(0 0% 0 0);
+    opacity: 0.45;
+    filter: blur(0.4px);
+  }
+}
+
+/* ── Pass 2: Darken and sharpen like pressing harder ── */
+@keyframes sketchSharpen {
+  0% {
+    opacity: 0.45;
+    filter: blur(0.4px);
+  }
+  40% {
+    opacity: 0.75;
+    filter: blur(0.15px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c8d9b8; border-radius: 3px; }
