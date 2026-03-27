@@ -1,23 +1,17 @@
-"""
-This file asynchronously fetches and parses data from the DineOnCampus API.
-It provides functions to retrieve the menu for a specific location and data.
-It returns the menus data as a JSON object that contains the the name of the station and the items, 
-which include information such as the name of the food, the calories, and the portion size.
-"""
 from datetime import date
 from typing import Dict, Any, List
 from cachetools import TTLCache
 import httpx
 
-menu_cache: TTLCache = TTLCache(maxsize=100, ttl=600) # Cache with a time-to-live of 10 minutes
+menu_cache: TTLCache = TTLCache(maxsize=100, ttl=3600)
 
-STEAST_LOC_ID = "586d05e4ee596f6e6c04b527" # Stetson East dining hall Location ID
-IV_LOC_ID = "5f4f8a425e42ad17329be131" # International Village dining hall Location ID
+STEAST_LOC_ID = "586d05e4ee596f6e6c04b527"
+IV_LOC_ID = "5f4f8a425e42ad17329be131"
 
-# Need heders to prevent Status Code 403 from DineOnCampus API
 HEADERS = {
-    "User-Agent" : (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
     ),
     "Accept": "application/json, text/plain, */*",
     "Accept-Language": "en-US,en;q=0.9,es;q=0.8",
@@ -29,21 +23,58 @@ HEADERS = {
     "sec-fetch-dest": "empty",
     "sec-fetch-mode": "cors",
     "sec-fetch-site": "same-site",
-
 }
 
-async def get_menu(location_id: str, period_id: str) -> dict[str, Any]:
-    """
-    Gets the menu for a specific location and date from the dineoncampus API.
-    Args:
-         location_id (str): The ID of the location to get the menu for.
-         period_id (str): The ID of the period to get the menu for (e.g., Breakfast, Lunch, Dinner).
-    Returns:
-        dict: the menu data as a JSON object that containes stations and items.
-                On failure, returns a JSON object with an error message and the status code.
-    """
-    cache_key = f"{location_id}-{period_id}-{get_date()}"
+# Nutrients we care about — maps API name -> short key
+NUTRIENT_MAP = {
+    "Calories":               "calories",
+    "Protein (g)":            "protein",
+    "Total Carbohydrates (g)":"carbs",
+    "Total Fat (g)":          "fat",
+    "Saturated Fat (g)":      "sat_fat",
+    "Trans Fat (g)":          "trans_fat",
+    "Dietary Fiber (g)":      "fiber",
+    "Sugar (g)":              "sugar",
+    "Sodium (mg)":            "sodium",
+    "Cholesterol (mg)":       "cholesterol",
+    "Potassium (mg)":         "potassium",
+    "Calcium (mg)":           "calcium",
+    "Iron (mg)":              "iron",
+    "Calories From Fat":      "calories_from_fat",
+}
 
+# Filters that are dietary tags (icon=True typically) vs allergens
+DIETARY_TAGS = {"Vegetarian", "Vegan", "Good Source of Protein", "Halal", "Gluten Free"}
+
+
+def parse_numeric(value) -> Any:
+    """Try to parse a nutrient value as a float, fallback to the raw string."""
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except (ValueError, TypeError):
+        return str(value)
+
+
+async def get_menu(location_name: str, period_name: str) -> Dict[str, Any]:
+    from app.services.location_service import get_location_id, get_period_id_by_name
+
+    location_id = get_location_id(location_name=location_name)
+    if not location_id:
+        return {
+            "error": f"Unrecognized location name: {location_name}",
+            "known_locations": ["stetson east", "international village"]
+        }
+
+    period_id = await get_period_id_by_name(location_id, period_name)
+    if not period_id:
+        return {
+            "error": f"Period '{period_name}' not found for today at {location_name}",
+            "hint": "The menu may not be published yet, or the period name may be misspelled."
+        }
+
+    cache_key = f"{location_id}-{period_id}-{get_date()}"
     if cache_key in menu_cache:
         return menu_cache[cache_key]
 
@@ -57,61 +88,64 @@ async def get_menu(location_id: str, period_id: str) -> dict[str, Any]:
             res = await client.get(url, timeout=10.0)
             res.raise_for_status()
         except httpx.HTTPStatusError as e:
-            # To detect a non-200 status code (4xx or 5xx error)
-            return {
-                "error": "DineOnCampus API failed",
-                "status": e.response.status_code,
-                "detail": str(e)
-            }
+            return {"error": "DineOnCampus API failed", "status": e.response.status_code, "detail": str(e)}
         except httpx.RequestError as e:
-            # To detect a network error or timeout
-            return {
-                "error" : "DineOnCampus API request failed",
-                "detail" : str(e)
-            }
+            return {"error": "DineOnCampus API request failed", "detail": str(e)}
 
-    data = res.json()
-    print("RAW API RESPONSE:", data)
+    data: Dict[str, Any] = res.json()
     per_data = data.get("period") or {}
     if not per_data:
-        return {
-            "error": "No period data found in the response", "raw" : data
-        }
+        return {"error": "No period data found in the response"}
+
     categories = per_data.get("categories", [])
     if not categories:
         return {
-            "error": "No categories found for this period — menu may not be published yet",
+            "error": "No categories found — menu may not be published yet",
             "period_id": period_id,
             "date": get_date()
         }
 
-    stations: List[Dict[str, Any]] = [] # Holds the stations and their menu items
-
+    stations: List[Dict[str, Any]] = []
     for category in categories:
-        # Holds the name of the station, default is unknown
-        station_name = category.get("name", "Unknown Station")
+        station_items: List[Dict[str, Any]] = []
+        for item in category.get("items", []):
+            # Parse nutrients into a flat dict
+            nutrients = {}
+            for n in item.get("nutrients", []):
+                key = NUTRIENT_MAP.get(n.get("name"))
+                if key:
+                    nutrients[key] = parse_numeric(n.get("valueNumeric"))
 
-        station_items: List[Dict[str, Any]] = [] # Stores the menu items for the station
-        for item in category.get("items", []): # Loop through each menu item in the station
+            # Split filters: icon=True -> dietary tags, *-suffix -> major allergens, else -> allergen/ingredient
+            filters = item.get("filters", [])
+            tags = [f["name"] for f in filters if f.get("icon") is True]
+            allergens_major = [f["name"].replace("*","") for f in filters if not f.get("icon") and f["name"].endswith("*")]
+            allergens = [f["name"] for f in filters if not f.get("icon") and not f["name"].endswith("*")]
+
             station_items.append({
-                "name": item.get("name", "Unknown Item"),
-                "calories": item.get("calories", "N/A"),
-                "portion": item.get("portion", "N/A")
+                "name":        item.get("name", "Unknown Item"),
+                "description": item.get("desc") or None,
+                "calories":    item.get("calories", "N/A"),
+                "portion":     item.get("portion", "N/A"),
+                "ingredients": item.get("ingredients") or None,
+                "nutrients":   nutrients,
+                "tags":        tags,
+                "allergens":   allergens,
+                "allergens_major": allergens_major,
             })
 
         stations.append({
-            "station": station_name,
+            "station": category.get("name", "Unknown Station"),
             "items": station_items
         })
+
     result = {
-        "status" : data.get("status", {}),
+        "status": data.get("status", {}),
         "stations": stations
     }
-    menu_cache[cache_key] = result # Cache result for future
+    menu_cache[cache_key] = result
     return result
 
+
 def get_date() -> str:
-    """
-    Returns the current date in ISO format (YYY-MM-DD).
-    """
     return date.today().isoformat()

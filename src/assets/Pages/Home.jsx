@@ -632,8 +632,8 @@ export default function Home() {
             <h1 className="sketch-1">Make your<br/><em>dining plan</em><br/><span className="hero-red">actually make sense.</span></h1>
             <p className="sketch-2">Track dining dollars, manage swipes, and discover the best food on campus, all in one place.</p>
             <div className="hero-ctas sketch-3">
-              <a href="/dashboard" className="btn btn-white btn-lg zoom-trigger" data-route="/dashboard"><span>Let's Start Budgeting</span></a>
-              <a href="/food-good" className="btn btn-outline btn-lg zoom-trigger" data-route="/food-good"><span>Is Food Good? →</span></a>
+              <a href="/onboarding" className="btn btn-white btn-lg zoom-trigger" data-route="/onboarding"><span>Let's Start Budgeting</span></a>
+              <a href="/menu" className="btn btn-outline btn-lg zoom-trigger" data-route="/menu"><span>Today's Menu →</span></a>
             </div>
           </div>
           <div className="photo-reel-wrapper">
