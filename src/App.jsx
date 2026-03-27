@@ -1,3 +1,4 @@
+import FoodGood from './assets/Pages/FoodGood'
 import React from 'react'
 import Onboarding from './assets/Pages/Onboarding'
 import { Routes, Route, useLocation } from 'react-router-dom'
@@ -18,6 +19,7 @@ export default function App() {
       {!isHome && <Nav />}
       <main className="flex-1">
         <Routes>
+          <Route path="/menu" element={<FoodGood />} />
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
