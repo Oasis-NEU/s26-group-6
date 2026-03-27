@@ -7,7 +7,7 @@ The router is prefixed with "/menu", and defines a GET endpoint.
 from typing import Dict, List, Any
 from fastapi import APIRouter, HTTPException
 from app.services.dineoncampus_service import get_menu
-from backend.app.services.location_service import get_periods, get_location_id, KNOWN_LOCATIONS
+from app.services.location_service import get_periods, get_location_id, KNOWN_LOCATIONS
 
 router = APIRouter(prefix="/menu")
 
