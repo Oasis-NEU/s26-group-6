@@ -16,8 +16,10 @@ def analyze_meal_plan(user: Any = Depends(get_current_user)):
     Analyses user's meal plan, returns dict (that maybe will get converted to json)
     which has keys:
     dd_overspending: bool
+    dd_spent_per_day: float
     dd_end_expected: float
     sw_overspending: bool
+    sw_spent_per_day: int
     sw_end_expected: int
     """
     data = Depends(get_user_info)
@@ -39,19 +41,23 @@ def analyze_meal_plan(user: Any = Depends(get_current_user)):
     dining_dollars_change = dining_dollars_start - dining_dollars_current
     swipes_change = swipes_start - swipes_current
     
-    dd_end_expected = (dining_dollars_change/current_duration) * total_duration
-    if ((dining_dollars_change/current_duration) * total_duration) > dining_dollars_start:
+    dd_spent_per_day = dining_dollars_change/current_duration
+    dd_end_expected = dd_spent_per_day * total_duration
+    if dd_end_expected > dining_dollars_start:
         dd_overspending = True
     else:
         dd_overspending = False
 
-    sw_end_expected = (swipes_change/current_duration) * total_duration
-    if ((swipes_change/current_duration) * total_duration) > swipes_start:
+    sw_spent_per_day = swipes_change/current_duration
+    sw_end_expected = sw_spent_per_day * total_duration
+    if sw_end_expected > swipes_start:
         sw_overspending = True
     else:
         sw_overspending = False
 
     return {"dd_overspending":dd_overspending,
+            "dd_spent_per_day":dd_spent_per_day,
             "dd_end_expected":dd_end_expected,
             "sw_overspending":sw_overspending,
+            "sw_spent_per_day":sw_spent_per_day,
             "sw_end_expected":sw_end_expected}
