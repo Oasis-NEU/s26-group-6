@@ -458,8 +458,8 @@ export default function Home() {
     const p5Ring = root.querySelector('#p5Ring');
     let p5Open = false;
 
-    const P5_LBL = ['Dashboard', 'Dining $', 'Swipes', 'Is Food Good?'];
-    const P5_ROUTES = ['/dashboard', '/dining-dollars', '/swipes', '/food-good'];
+    const P5_LBL = ['Dashboard', 'Dining $', 'Swipes', 'Todays Menu'];
+    const P5_ROUTES = ['/dashboard', '/dining-dollars', '/swipes', '/menu'];
     const P5_N = P5_LBL.length;
     const P5_R = 150, P5_SA = -15, P5_EA = 115, P5_XO = -40;
 
