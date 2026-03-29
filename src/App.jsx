@@ -1,3 +1,4 @@
+import FoodGood from './assets/Pages/FoodGood'
 import React from 'react'
 import Onboarding from './assets/Pages/Onboarding'
 import { Routes, Route, useLocation } from 'react-router-dom'
@@ -8,7 +9,6 @@ import Login from './assets/pages/Login'
 import Dashboard from './assets/pages/Dashboard'
 import DiningDollars from './assets/pages/DiningDollars'
 import Swipes from './assets/pages/Swipes'
-import FoodGood from './assets/pages/FoodGood'
 
 export default function App() {
   const location = useLocation()
@@ -19,12 +19,12 @@ export default function App() {
       {!isHome && <Nav />}
       <main className="flex-1">
         <Routes>
+          <Route path="/menu" element={<FoodGood />} />
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dining-dollars" element={<DiningDollars />} />
           <Route path="/swipes" element={<Swipes />} />
-          <Route path="/food-good" element={<FoodGood />} />
           <Route path="/onboarding" element={<Onboarding />} />
         </Routes>
       </main>
