@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import callumPhoto from '../callum_new.jpg';
 import './Home.css';
@@ -8,6 +8,7 @@ export default function Home() {
   const navigate = useNavigate();
   const cleanupRef = useRef(null);
   const runTransRef = useRef(null);
+  const [isLoggedIn] = useState(() => !!localStorage.getItem('nomnom_profile'));
 
   useEffect(() => {
     if (!wrapperRef.current) return;
@@ -671,7 +672,10 @@ export default function Home() {
             <h1 className="sketch-1">Make your<br/><em>dining plan</em><br/><span className="hero-red">actually make sense.</span></h1>
             <p className="sketch-2">Track dining dollars, manage swipes, and discover the best food on campus, all in one place.</p>
             <div className="hero-ctas sketch-3">
-              <a href="/onboarding" className="btn btn-white btn-lg zoom-trigger" data-route="/onboarding"><span>Let's Start Budgeting</span></a>
+              {isLoggedIn
+                ? <a href="/dashboard" className="btn btn-white btn-lg zoom-trigger" data-route="/dashboard" onClick={e => { e.preventDefault(); runTransRef.current?.(() => navigate('/dashboard')); }}><span>Go to Dashboard</span></a>
+                : <a href="/onboarding" className="btn btn-white btn-lg zoom-trigger" data-route="/onboarding"><span>Let's Start Budgeting</span></a>
+              }
               <a href="/menu" className="btn btn-outline btn-lg zoom-trigger" data-route="/menu"><span>Today's Menu →</span></a>
             </div>
           </div>
@@ -758,7 +762,7 @@ export default function Home() {
           </div>
         </section>
         <footer className="scroll-section">
-          <p>© 2026 SwipeWise &nbsp;|&nbsp; <a href="#">Contact</a></p>
+          <p>© 2026 SwipeWise &nbsp;&nbsp; <a href="#"></a></p>
         </footer>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import PhotoReel from '../Components/PhotoReel'
 
 // ── Helpers ───────────────────────────────────────────────────────
 function today() { return new Date() }
@@ -320,10 +321,11 @@ export default function Dashboard() {
   }
 
   return (
-    <div style={{ background: '#FAF9F6', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: '#FAF9F6', backgroundImage: 'linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px)', backgroundSize: '24px 24px', minHeight: '100vh' }}>
 
       {/* ── Hero ── */}
       <div style={S.hero}>
+        <PhotoReel />
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(circle at 80% 50%, rgba(212,43,43,0.12), transparent 60%), radial-gradient(circle at 20% 80%, rgba(255,228,92,0.06), transparent 50%)', zIndex: 1 }} />
         <div style={{ position: 'absolute', inset: 0, opacity: 0.03, backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '22px 22px', zIndex: 1 }} />
         <div style={S.heroInner}>
