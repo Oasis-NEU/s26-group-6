@@ -758,7 +758,7 @@ export default function Home() {
           </div>
         </section>
         <footer className="scroll-section">
-          <p>© 2026 SwipeWise &nbsp;|&nbsp; <a href="#">Contact</a></p>
+          <p>© 2026 SwipeWise &nbsp;&nbsp; <a href="#"></a></p>
         </footer>
       </div>
     </div>

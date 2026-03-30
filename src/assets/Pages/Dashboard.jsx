@@ -320,7 +320,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div style={{ background: '#FAF9F6', minHeight: '100vh' }}>
+    <div style={{ backgroundColor: '#FAF9F6', backgroundImage: 'linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px)', backgroundSize: '24px 24px', minHeight: '100vh' }}>
 
       {/* ── Hero ── */}
       <div style={S.hero}>
