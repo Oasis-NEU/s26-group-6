@@ -55,7 +55,7 @@ function StatusBadge({ status }) {
   return (
     <div style={{ display:'flex',alignItems:'center',gap:'6px',padding:'5px 12px',borderRadius:'99px', background: isOpen ? 'rgba(74,222,128,0.15)' : 'rgba(212,43,43,0.15)', border:`1.5px solid ${isOpen ? 'rgba(74,222,128,0.4)' : 'rgba(212,43,43,0.4)'}` }}>
       <div style={{ width:'7px',height:'7px',borderRadius:'50%',background: isOpen ? '#4ade80' : '#D42B2B', boxShadow: isOpen ? '0 0 6px #4ade80' : 'none' }} />
-      <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.08em',color: isOpen ? '#4ade80' : '#D42B2B' }}>
+      <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.08em',color: isOpen ? '#4ade80' : '#D42B2B' }}>
         {status.message || (isOpen ? 'OPEN' : 'CLOSED')}
       </span>
     </div>
@@ -66,8 +66,8 @@ function NutrientRow({ label, value, unit, highlight }) {
   if (value === null || value === undefined) return null
   return (
     <div style={{ display:'flex',justifyContent:'space-between',alignItems:'center',padding:'4px 0',borderBottom:'1px solid rgba(0,0,0,0.04)' }}>
-      <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.06em',color:'#6B7280' }}>{label}</span>
-      <span style={{ fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'0.8rem',color: highlight ? '#D42B2B' : '#1a1a1a' }}>{value}{unit ? <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontWeight:400,fontSize:'0.75rem',color:'#9CA3AF',marginLeft:'2px' }}>{unit}</span> : null}</span>
+      <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.06em',color:'#6B7280' }}>{label}</span>
+      <span style={{ fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'0.8rem',color: highlight ? '#D42B2B' : '#1a1a1a' }}>{value}{unit ? <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontWeight:400,fontSize:'0.84rem',color:'#9CA3AF',marginLeft:'2px' }}>{unit}</span> : null}</span>
     </div>
   )
 }
@@ -135,7 +135,7 @@ function DishCard({ item }) {
               { label:'SODIUM',  val: n.sodium,   unit:'mg', color: n.sodium > 600 ? '#D42B2B' : '#6B7280' },
             ].map(({ label, val, unit, color }) => val !== null && val !== undefined ? (
               <div key={label} style={{ background:'#fff',border:'1.5px solid rgba(0,0,0,0.07)',borderRadius:'6px',padding:'6px 8px',textAlign:'center' }}>
-                <p style={{ fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'0.9rem',color,margin:'0 0 1px' }}>{val}<span style={{ fontSize:'0.6rem',color:'#9CA3AF',marginLeft:'1px' }}>{unit}</span></p>
+                <p style={{ fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'0.9rem',color,margin:'0 0 1px' }}>{val}<span style={{ fontSize:'0.74rem',color:'#9CA3AF',marginLeft:'1px' }}>{unit}</span></p>
                 <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.58rem',letterSpacing:'0.08em',color:'#9CA3AF',margin:0 }}>{label}</p>
               </div>
             ) : null)}
@@ -169,7 +169,7 @@ function DishCard({ item }) {
           {item.ingredients && (
             <div style={{ marginTop:'8px',paddingTop:'8px',borderTop:'1px solid rgba(0,0,0,0.05)' }}>
               <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.8rem',letterSpacing:'0.08em',color:'#9CA3AF',display:'block',marginBottom:'3px' }}>INGREDIENTS</span>
-              <p style={{ fontFamily:"'Inter',sans-serif",fontSize:'0.72rem',color:'#9CA3AF',margin:0,lineHeight:1.5 }}>{item.ingredients}</p>
+              <p style={{ fontFamily:"'Inter',sans-serif",fontSize:'0.82rem',color:'#9CA3AF',margin:0,lineHeight:1.5 }}>{item.ingredients}</p>
             </div>
           )}
         </div>
@@ -195,7 +195,7 @@ function StationSection({ station }) {
         <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.8rem',letterSpacing:'0.06em',color:'#C0C0C0' }}>
           {items.length} ITEMS{avgCal > 0 ? ` · ~${Math.round(avgCal)} CAL AVG` : ''}
         </span>
-        <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',color:'#C0C0C0',marginLeft:'4px',transition:'transform 0.2s',display:'inline-block',transform: collapsed ? 'rotate(-90deg)' : 'rotate(0deg)' }}>▼</span>
+        <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',color:'#C0C0C0',marginLeft:'4px',transition:'transform 0.2s',display:'inline-block',transform: collapsed ? 'rotate(-90deg)' : 'rotate(0deg)' }}>▼</span>
       </div>
       {!collapsed && (
         <div style={{ display:'grid',gridTemplateColumns:'repeat(auto-fill, minmax(210px,1fr))',gap:'7px',animation:'fadeIn 0.2s ease' }}>
@@ -352,7 +352,7 @@ export default function FoodGood() {
 
         {/* Diet filter chips */}
         <div style={{ display:'flex',gap:'8px',flexWrap:'wrap',alignItems:'center' }}>
-          <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.1em',color:'#C0C0C0' }}>FILTER:</span>
+          <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.1em',color:'#C0C0C0' }}>FILTER:</span>
           {DIET_FILTERS.map(f => {
             const active = activeFilters.includes(f.id)
             return (
@@ -371,7 +371,7 @@ export default function FoodGood() {
           })}
           {activeFilters.length > 0 && (
             <button onClick={() => setActiveFilters([])}
-              style={{ padding:'5px 10px', fontFamily:"'Bebas Neue',sans-serif", fontSize:'0.75rem', letterSpacing:'0.06em', cursor:'pointer', background:'none', border:'1.5px solid rgba(0,0,0,0.1)', borderRadius:'99px', color:'#9CA3AF' }}>
+              style={{ padding:'5px 10px', fontFamily:"'Bebas Neue',sans-serif", fontSize:'0.84rem', letterSpacing:'0.06em', cursor:'pointer', background:'none', border:'1.5px solid rgba(0,0,0,0.1)', borderRadius:'99px', color:'#9CA3AF' }}>
               CLEAR ×
             </button>
           )}
@@ -380,15 +380,15 @@ export default function FoodGood() {
         {/* Cal legend + tap hint */}
         <div style={{ display:'flex',alignItems:'center',gap:'16px',flexWrap:'wrap',justifyContent:'space-between' }}>
           <div style={{ display:'flex',alignItems:'center',gap:'16px',flexWrap:'wrap' }}>
-            <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.1em',color:'#C0C0C0' }}>CALORIE GUIDE:</span>
+            <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.1em',color:'#C0C0C0' }}>CALORIE GUIDE:</span>
             {[{ color:'#4ade80', label:'LIGHT (≤150)' }, { color:'#FFB300', label:'MODERATE (≤350)' }, { color:'#D42B2B', label:'HIGH (350+)' }].map(({ color, label }) => (
               <div key={label} style={{ display:'flex',alignItems:'center',gap:'5px' }}>
                 <div style={{ width:'24px',height:'3px',background:color,borderRadius:'99px' }} />
-                <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.06em',color:'#9CA3AF' }}>{label}</span>
+                <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.06em',color:'#9CA3AF' }}>{label}</span>
               </div>
             ))}
           </div>
-          <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.06em',color:'#C0C0C0' }}>TAP A DISH FOR NUTRITION INFO</span>
+          <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.06em',color:'#C0C0C0' }}>TAP A DISH FOR NUTRITION INFO</span>
         </div>
 
         {/* Menu card */}
@@ -407,7 +407,7 @@ export default function FoodGood() {
             </div>
             <div style={{ display:'flex',alignItems:'center',gap:'6px' }}>
               <div style={{ width:'7px',height:'7px',borderRadius:'50%',background: menuLoading ? '#F59E0B' : error ? '#9CA3AF' : '#4ade80', boxShadow: !menuLoading && !error ? '0 0 5px #4ade80' : 'none' }} />
-              <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.08em',color:'#9CA3AF' }}>
+              <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.08em',color:'#9CA3AF' }}>
                 {menuLoading ? 'LOADING' : error ? 'UNAVAILABLE' : `LIVE · ${totalItems} ITEMS`}
               </span>
             </div>

@@ -128,7 +128,7 @@ export default function Login() {
 
         {/* Bottom: footer note */}
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: 0 }}>
+          <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: 0 }}>
             © 2026 NOMNOM · OASIS · NORTHEASTERN UNIVERSITY
           </p>
         </div>

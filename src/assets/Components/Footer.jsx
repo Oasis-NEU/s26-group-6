@@ -57,12 +57,12 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-          <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.25)', margin: 0 }}>
+          <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.25)', margin: 0 }}>
             © 2026 NOMNOM · NORTHEASTERN UNIVERSITY · BOSTON, MA
           </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 5px #4ade80' }} />
-            <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.25)' }}>BUILT BY HUSKIES</span>
+            <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.25)' }}>BUILT BY HUSKIES</span>
           </div>
         </div>
       </div>
