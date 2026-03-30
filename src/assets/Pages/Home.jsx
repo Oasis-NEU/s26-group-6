@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import callumPhoto from '../callum.jpg';
+import callumPhoto from '../callum_new.jpg';
 import './Home.css';
 
 export default function Home() {
@@ -8,6 +8,7 @@ export default function Home() {
   const navigate = useNavigate();
   const cleanupRef = useRef(null);
   const runTransRef = useRef(null);
+  const [isLoggedIn] = useState(() => !!localStorage.getItem('nomnom_profile'));
 
   useEffect(() => {
     if (!wrapperRef.current) return;
@@ -458,8 +459,8 @@ export default function Home() {
     const p5Ring = root.querySelector('#p5Ring');
     let p5Open = false;
 
-    const P5_LBL = ['Dashboard', 'Dining $', 'Swipes', 'Is Food Good?'];
-    const P5_ROUTES = ['/dashboard', '/dining-dollars', '/swipes', '/food-good'];
+    const P5_LBL = ['Dashboard', 'Dining $', 'Swipes', 'Todays Menu'];
+    const P5_ROUTES = ['/dashboard', '/dining-dollars', '/swipes', '/menu'];
     const P5_N = P5_LBL.length;
     const P5_R = 150, P5_SA = -15, P5_EA = 115, P5_XO = -40;
 
@@ -671,7 +672,10 @@ export default function Home() {
             <h1 className="sketch-1">Make your<br/><em>dining plan</em><br/><span className="hero-red">actually make sense.</span></h1>
             <p className="sketch-2">Track dining dollars, manage swipes, and discover the best food on campus, all in one place.</p>
             <div className="hero-ctas sketch-3">
-              <a href="/onboarding" className="btn btn-white btn-lg zoom-trigger" data-route="/onboarding"><span>Let's Start Budgeting</span></a>
+              {isLoggedIn
+                ? <a href="/dashboard" className="btn btn-white btn-lg zoom-trigger" data-route="/dashboard" onClick={e => { e.preventDefault(); runTransRef.current?.(() => navigate('/dashboard')); }}><span>Go to Dashboard</span></a>
+                : <a href="/onboarding" className="btn btn-white btn-lg zoom-trigger" data-route="/onboarding"><span>Let's Start Budgeting</span></a>
+              }
               <a href="/menu" className="btn btn-outline btn-lg zoom-trigger" data-route="/menu"><span>Today's Menu →</span></a>
             </div>
           </div>
@@ -701,7 +705,7 @@ export default function Home() {
           <div className="features-grid">
             <div className="card-3d"  data-tilt="-8" data-hue="130" data-sat="55" data-light="38"><div className="card-3d-inner feature-card"><h3><span className="highlight-wrap">Dining Dollars Tracker<span className="highlight-bg"></span></span></h3><p>See exactly where your money is going: restaurants, groceries, or on-campus spots. Stay on pace all semester.</p></div></div>
             <div className="card-3d"  data-tilt="6" data-hue="25" data-sat="70" data-light="52"><div className="card-3d-inner feature-card"><h3><span className="highlight-wrap">Swipe Manager<span className="highlight-bg"></span></span></h3><p>Track your weekly swipes, dining hall visits, and outtakes. Never let a swipe go to waste again.</p></div></div>
-            <div className="card-3d"  data-tilt="-10" data-hue="48" data-sat="75" data-light="50"><div className="card-3d-inner feature-card"><h3><span className="highlight-wrap">Is Food Good?<span className="highlight-bg"></span></span></h3><p>Get personalized meal suggestions based on your diet preferences, cuisine tastes, and today's dining hall menu.</p></div></div>
+            <div className="card-3d"  data-tilt="-10" data-hue="48" data-sat="75" data-light="50"><div className="card-3d-inner feature-card"><h3><span className="highlight-wrap">Today's Menu<span className="highlight-bg"></span></span></h3><p>Check out today's dining hall menu across the different dining halls.</p></div></div>
             <div className="card-3d"  data-tilt="12" data-hue="270" data-sat="50" data-light="48"><div className="card-3d-inner feature-card"><h3><span className="highlight-wrap">Pace Tracker<span className="highlight-bg"></span></span></h3><p>Are you spending too fast? Too slow? We'll tell you if you're on track to make it to the end of the semester.</p></div></div>
             <div className="card-3d"  data-tilt="-5" data-hue="170" data-sat="55" data-light="42"><div className="card-3d-inner feature-card"><h3><span className="highlight-wrap">Grocery Planner<span className="highlight-bg"></span></span></h3><p>Optimize your grocery runs against your remaining balance. Build a shopping list that stretches every dollar.</p></div></div>
             <div className="card-3d"  data-tilt="9" data-hue="345" data-sat="60" data-light="52"><div className="card-3d-inner feature-card"><h3><span className="highlight-wrap">Smart Alerts<span className="highlight-bg"></span></span></h3><p>Get notified before you overspend or end the semester with leftover balance you can't use.</p></div></div>
@@ -758,7 +762,7 @@ export default function Home() {
           </div>
         </section>
         <footer className="scroll-section">
-          <p>© 2026 SwipeWise &nbsp;|&nbsp; <a href="#">Contact</a></p>
+          <p>© 2026 SwipeWise &nbsp;&nbsp; <a href="#"></a></p>
         </footer>
       </div>
     </div>
