@@ -5,18 +5,19 @@ Functions handle database updates relating to user information
 """
 from fastapi import APIRouter, HTTPException, Depends, Header
 from typing import Any
-from backend.app.db.supabase_client import supabase_client
-from backend.app.routers.auth import get_current_user
+from app.db.supabase_client import supabase_client
+from app.routers.auth import get_current_user
+from pydantic import BaseModel
 
 router = APIRouter(prefix="/user")
 
-@router.put("/update/")
+@router.put("/update")
 async def update_user_info(
-    user: Any = Depends(get_current_user),
     username: str | None = None,
     email: str | None = None,
     dietary_preferences: list[str] | None = None,
-    diet_restrictions: str | None = None
+    diet_restrictions: str | None = None,
+    user: Any = Depends(get_current_user)
 ) -> APIResponse|Exception:
     update_dict: dict[str,str|list[str]] = {}
 
@@ -59,15 +60,18 @@ async def delete_user(user: Any = Depends(get_current_user)) -> Exception|APIRes
     except Exception as exception:
         return exception
 
-@router.post("/update_meal_plan/")
+class meal_plan_request(BaseModel):
+    swipes_start: int|None
+    dining_dollars_start: float|None
+    start_date: str|None = None
+    end_date: str|None = None
+    swipes_current: int|None = None
+    dining_dollars_current: float|None = None
+    plan_name: str|None = None
+
+@router.post("/update_meal_plan")
 async def create_meal_plan(
-    swipes_start: int|None,
-    dining_dollars_start: float|None,
-    start_date: str|None = None,
-    end_date: str|None = None,
-    swipes_current: int|None = None,
-    dining_dollars_current: float|None = None,
-    plan_name: str|None = None,
+    body: meal_plan_request,
     user: Any = Depends(get_current_user)
 ):
     """
@@ -76,20 +80,20 @@ async def create_meal_plan(
 
     update_dict: dict[str,str] = {}
 
-    if swipes_start:
-        update_dict["swipes_start"] = swipes_start
-    if dining_dollars_start:
-        update_dict["dining_dollars_start"] = dining_dollars_start
-    if start_date:
-        update_dict["start_date"] = start_date
-    if end_date:
-        update_dict["end_date"] = end_date
-    if swipes_current:
-        update_dict["swipes_current"] = swipes_current
-    if dining_dollars_current:
-        update_dict["dining_dollars_current"] = dining_dollars_current
-    if plan_name:
-        update_dict["plan_name"] = plan_name
+    if body.swipes_start:
+        update_dict["swipes_start"] = body.swipes_start
+    if body.dining_dollars_start:
+        update_dict["dining_dollars_start"] = body.dining_dollars_start
+    if body.start_date:
+        update_dict["start_date"] = body.start_date
+    if body.end_date:
+        update_dict["end_date"] = body.end_date
+    if body.swipes_current:
+        update_dict["swipes_current"] = body.swipes_current
+    if body.dining_dollars_current:
+        update_dict["dining_dollars_current"] = body.dining_dollars_current
+    if body.plan_name:
+        update_dict["plan_name"] = body.plan_name
 
     if not update_dict:
         raise HTTPException(status_code=400, detail="No fields to update")
@@ -133,8 +137,8 @@ async def get_user_info(user: Any = Depends(get_current_user)) -> Exception|APIR
     
 @router.get("/get_specific/")
 async def get_user_info_specific(
-    user: Any = Depends(get_current_user),
-    columns: list[str]
+    columns: list[str],
+    user: Any = Depends(get_current_user)
     ) -> Exception|APIResponse:
     try:
         response = (

@@ -14,13 +14,11 @@ class AuthRequest(BaseModel):
     password: str
     full_name: str|None
     username: str|None
-    dietary_restrictions: list[str]|None
-    dietary_preferences: list[str]|None
 
 def _extract_bearer_token(authorization: str) -> str:
-    if not authorization.startswith("Bearer "):
+    if not authorization.startswith("bearer"):
         raise HTTPException(status_code=401, detail="Invalid authorization header")
-    token = authorization.split(" ", 1)[1].strip()
+    token = authorization.split(",", 2)[1].strip()
     if not token:
         raise HTTPException(status_code=401, detail="Missing bearer token")
     return token
@@ -44,14 +42,14 @@ def register(body: AuthRequest):
         "options": {
             "data": {
                 "fullName": body.full_name,
-                "username": body.username,
-                "dietary_restrictions": body.dietary_restrictions,
-                "dietary_preferences": body.dietary_preferences
+                "username": body.username
             }
         }
     })
     if response.user is None:
         raise HTTPException(status_code=400, detail="Registration failed")
+    
+    session = response.session
     return {"user": response.user}
 
 

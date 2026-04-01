@@ -16,30 +16,29 @@ const inputCls = {
   transition: 'border-color 0.15s',
 }
 
-const DIET_OPTIONS = ['Vegetarian', 'Vegan', 'Halal', 'Kosher', 'Gluten-Free', 'Dairy-Free', 'Nut-Free']
-const CUISINE_OPTIONS = ['American', 'Asian', 'Indian', 'Italian', 'Mediterranean', 'Mexican']
 const PLAN_OPTIONS = [
-  { id: 'unlimited', label: 'NU - Unlimited' },
-  { id: '225',       label: 'NU - 225' },
-  { id: '180',       label: 'NU - 180' },
-  { id: '150',       label: 'NU - 150' },
-  { id: '100',       label: 'NU - 100' },
+  { id: '999',       dd:'400',       label: 'NU - Unlimited' },
+  { id: '225',       dd:'600',       label: 'NU - 225' },
+  { id: '180',       dd:'300',       label: 'NU - 180' },
+  { id: '150',       dd:'200',       label: 'NU - 150' },
+  { id: '100',       dd:'200',       label: 'NU - 100' },
 ]
 
-function Chip({ label, selected, onToggle }) {
-  return (
-    <button type="button" onClick={onToggle} style={{
-      padding: '4px 12px', borderRadius: '99px', cursor: 'pointer', transition: 'all 0.12s',
-      border: `1.5px solid ${selected ? '#1a1a1a' : 'rgba(0,0,0,0.15)'}`,
-      background: selected ? '#FFE45C' : '#fff', color: '#1a1a1a',
-      fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.72rem', letterSpacing: '0.06em',
-      boxShadow: selected ? '2px 2px 0 #1a1a1a' : 'none', marginBottom: '5px',
-    }}>{label}</button>
-  )
+async function login({ email, password }) {
+  const response = await fetch('http://localhost:8000/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+      full_name: null,
+      username: null
+    })
+  });
+  return response;
 }
 
-async function register({ email, password, fullName, username, 
-                          dietaryRestrictions, dietaryPreferences }) {
+async function register({ email, password, fullName, username }) {
   const response = await fetch('http://localhost:8000/auth/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -53,14 +52,17 @@ async function register({ email, password, fullName, username,
   return response;
 };
 
-async function addMealPlan({ planName = null, swipesStart = null, diningDollarsStart = null }){
-  const response = await fetch('https://localhost:8000/user/update_meal_plan' , {
+async function addMealPlan({ sessionToken, planName = null, swipesStart = null, diningDollarsStart = null }) {
+  const response = await fetch('http://localhost:8000/user/update_meal_plan' , {
   method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      plan_name: planName,
-      swipes_start: swipesStart,
-      dining_dollars_start: diningDollarsStart,
+  headers: { 
+    'Content-Type': 'application/json',
+    'authorization': sessionToken
+   },
+  body: JSON.stringify({
+    plan_name: planName,
+    swipes_start: swipesStart,
+    dining_dollars_start: diningDollarsStart,
     })
   });
   return response;
@@ -75,7 +77,7 @@ export default function Login() {
   const toggleArr = (arr, setArr, val) =>
     setArr(p => p.includes(val) ? p.filter(x => x !== val) : [...p, val])
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target)
     if (formData === null) {
@@ -86,38 +88,39 @@ export default function Login() {
     const email = formData.get("email");
     const password = formData.get("password");
 
-    // TBD, form needs to be fixed first
-    const dietaryRestrictions = null
-    const dietaryPreferences = null
+    const diningPlanObject = PLAN_OPTIONS.find(u => u.id === (formData.get("diningPlan")));
+    const swipesStart = Number(diningPlanObject.id);
+    const planName = diningPlanObject.label
+    const placeholderDD = Number(diningPlanObject.dd);
 
-
-    const diningPlan = formData.get("diningPlan");
-    let swipesStart;
-    if (diningPlan == 'unlimited'){
-      swipesStart = '999';
-    } else {
-      swipesStart = Number(diningPlan);
-    };
-    const planName = 'placeholderName';
-
-    const response1 = register({
+    const registerResponse = await register({
       email,
       password,
       fullName,
-      username,
-
+      username
     });
-    console.log(response1);
+    const registerResponseJson = await registerResponse.json()
+    console.log(registerResponseJson);
 
-    //remove later
-    //const placeholderDD = 67;
+    if (registerResponseJson) {
+      const loginResponse = await login({
+        email,
+        password
+      });
+      const loginResponseJson = await loginResponse.json()
+      console.log(loginResponseJson)
 
-    //const response2 = addMealPlan({
-    //  planName, 
-    //  swipesStart, 
-    //  placeholderDD
-    //});
-    //console.log(response2);
+      const tokenStr = `${loginResponseJson.token_type},${loginResponseJson.access_token},${loginResponseJson.token_user}`;
+      console.log(tokenStr);
+
+      const mealPlanResponse = await addMealPlan({
+        sessionToken: tokenStr,
+        planName, 
+        swipesStart, 
+        diningDollarsStart: placeholderDD
+      });
+      console.log(mealPlanResponse);
+    };
 
     navigate('/dashboard') }
 
@@ -125,7 +128,6 @@ export default function Login() {
     e.preventDefault();
     navigate('/dashboard')
   }
-
 
 
 
@@ -299,6 +301,7 @@ export default function Login() {
                 <label style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.7rem', letterSpacing: '0.1em', color: '#9CA3AF', marginBottom: '6px' }}>PASSWORD</label>
                 <input name="password" type="password" placeholder="Create a password" style={inputCls} />
               </div>
+
               <div>
                 <label style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.7rem', letterSpacing: '0.1em', color: '#9CA3AF', marginBottom: '6px' }}>DINING PLAN</label>
                 <select name="diningPlan" style={{ ...inputCls }}>
@@ -307,22 +310,8 @@ export default function Login() {
                 </select>
               </div>
 
-              <div>
-                <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.7rem', letterSpacing: '0.1em', color: '#9CA3AF', margin: '0 0 8px' }}>DIETARY PREFERENCES</p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {DIET_OPTIONS.map(opt => <Chip key={opt} label={opt} selected={diet.includes(opt)} onToggle={() => toggleArr(diet, setDiet, opt)} />)}
-                </div>
-              </div>
-
-              <div>
-                <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.7rem', letterSpacing: '0.1em', color: '#9CA3AF', margin: '0 0 8px' }}>CUISINE PREFERENCES</p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {CUISINE_OPTIONS.map(opt => <Chip key={opt} label={opt} selected={cuisine.includes(opt)} onToggle={() => toggleArr(cuisine, setCuisine, opt)} />)}
-                </div>
-              </div>
-
               <button type="submit" style={{
-                padding: '13px', background: '#D42B2B', color: '#fff',
+                padding: '15px', background: '#D42B2B', color: '#fff',
                 border: '2.5px solid #1a1a1a', borderRadius: '8px',
                 fontFamily: "'Bebas Neue', sans-serif", fontSize: '1rem', letterSpacing: '0.08em',
                 cursor: 'pointer', boxShadow: '4px 4px 0 #1a1a1a', transition: 'all 0.12s', marginTop: '4px',
