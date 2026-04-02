@@ -9,7 +9,7 @@ from app.db.supabase_client import supabase_client
 from app.routers.auth import get_current_user
 from pydantic import BaseModel
 
-router = APIRouter(prefix="/user")
+router = APIRouter(prefix="/user", tags=["user"])
 
 @router.put("/update")
 async def update_user_info(
