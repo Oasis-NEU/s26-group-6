@@ -16,6 +16,8 @@ const inputCls = {
   transition: 'border-color 0.15s',
 }
 
+<<<<<<< HEAD
+=======
 const PLAN_OPTIONS = [
   { id: '999',       dd:'400',       label: 'NU - Unlimited' },
   { id: '225',       dd:'600',       label: 'NU - 225' },
@@ -68,12 +70,14 @@ async function addMealPlan({ sessionToken, planName = null, swipesStart = null, 
   return response;
 };
 
+>>>>>>> origin/main
 export default function Login() {
   const [tab, setTab] = useState('signin')
-  const [diet, setDiet] = useState([])
-  const [cuisine, setCuisine] = useState([])
   const navigate = useNavigate()
 
+<<<<<<< HEAD
+  const handleSubmit = (e) => { e.preventDefault(); navigate('/dashboard') }
+=======
   const toggleArr = (arr, setArr, val) =>
     setArr(p => p.includes(val) ? p.filter(x => x !== val) : [...p, val])
 
@@ -130,6 +134,7 @@ export default function Login() {
   }
 
 
+>>>>>>> origin/main
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', fontFamily: "'Inter', sans-serif" }}>
@@ -178,7 +183,7 @@ export default function Login() {
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '3.5rem' }}>
             <div style={{ width: '4px', height: '32px', background: '#D42B2B', borderRadius: '2px' }} />
-            <span style={{ fontFamily: "'Chicle', serif", fontSize: '1.6rem', fontWeight: 700, color: '#fff' }}>NomNom</span>
+            <span style={{ fontFamily: "'Chicle', serif", fontSize: '1.6rem', fontWeight: 700, color: '#fff' }}>SwipeWise</span>
           </div>
 
           {/* Big editorial headline */}
@@ -210,8 +215,8 @@ export default function Login() {
 
         {/* Bottom: footer note */}
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: 0 }}>
-            © 2026 NOMNOM · OASIS · NORTHEASTERN UNIVERSITY
+          <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.2)', margin: 0 }}>
+            © 2026 SWIPEWISE · OASIS · NORTHEASTERN UNIVERSITY
           </p>
         </div>
       </div>
@@ -232,7 +237,7 @@ export default function Login() {
               {tab === 'signin' ? 'WELCOME BACK' : 'GET STARTED'}
             </p>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '2rem', color: '#1a1a1a', margin: 0, lineHeight: 1.1 }}>
-              {tab === 'signin' ? 'Sign in to NomNom.' : 'Create your account.'}
+              {tab === 'signin' ? 'Sign in to SwipeWise.' : 'Create your account.'}
             </h2>
           </div>
 
@@ -301,6 +306,11 @@ export default function Login() {
                 <label style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.7rem', letterSpacing: '0.1em', color: '#9CA3AF', marginBottom: '6px' }}>PASSWORD</label>
                 <input name="password" type="password" placeholder="Create a password" style={inputCls} />
               </div>
+<<<<<<< HEAD
+
+
+
+=======
 
               <div>
                 <label style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.7rem', letterSpacing: '0.1em', color: '#9CA3AF', marginBottom: '6px' }}>DINING PLAN</label>
@@ -310,6 +320,7 @@ export default function Login() {
                 </select>
               </div>
 
+>>>>>>> origin/main
               <button type="submit" style={{
                 padding: '15px', background: '#D42B2B', color: '#fff',
                 border: '2.5px solid #1a1a1a', borderRadius: '8px',

@@ -65,7 +65,7 @@ const st = {
   paceBadge: (pace) => {
     const map = { on_track:{ bg:'#f0f7eb',color:'#2d6a1f',border:'#c8deba',label:'On Pace' }, over:{ bg:'#FFF0EE',color:'#D42B2B',border:'#f0b8b8',label:'Spending Fast' }, under:{ bg:'#e6f0ff',color:'#1a4fa0',border:'#b8d0f0',label:'Ahead' } }
     const p = map[pace] || map.on_track
-    return { fontFamily:"'Bebas Neue',sans-serif", fontSize:'0.75rem', letterSpacing:'0.08em', padding:'3px 10px', borderRadius:'99px', background:p.bg, color:p.color, border:`1.5px solid ${p.border}`, display:'inline-block' }
+    return { fontFamily:"'Bebas Neue',sans-serif", fontSize:'0.84rem', letterSpacing:'0.08em', padding:'3px 10px', borderRadius:'99px', background:p.bg, color:p.color, border:`1.5px solid ${p.border}`, display:'inline-block' }
   },
 }
 
@@ -203,7 +203,7 @@ export default function DiningDollars() {
           {/* Big balance + breakdown */}
           <div style={{ display:'grid',gridTemplateColumns:'auto 1fr',gap:'2.5rem',alignItems:'center',marginTop:'2rem',flexWrap:'wrap' }}>
             <div>
-              <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.12em',color:'rgba(255,255,255,0.35)',margin:'0 0 4px' }}>CURRENT BALANCE</p>
+              <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.12em',color:'rgba(255,255,255,0.35)',margin:'0 0 4px' }}>CURRENT BALANCE</p>
               <p style={{ fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'clamp(2.8rem,6vw,4.5rem)',color:'#fff',lineHeight:1,margin:'0 0 4px' }}>${current.toFixed(0)}</p>
               <div style={{ display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap' }}>
                 <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.8rem',letterSpacing:'0.06em',color:'rgba(255,255,255,0.35)',margin:0 }}>OF ${totalDD} · {pct}% REMAINING</p>
@@ -270,8 +270,8 @@ export default function DiningDollars() {
                   ))}
                 </div>
                 <div style={{ display:'flex',justifyContent:'space-between' }}>
-                  <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.06em',color:'#9CA3AF' }}>${projWeekly}/WK PROJECTED</span>
-                  <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.06em',color:'#9CA3AF' }}>ACTUAL TRACKING — COMING SOON</span>
+                  <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.06em',color:'#9CA3AF' }}>${projWeekly}/WK PROJECTED</span>
+                  <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.06em',color:'#9CA3AF' }}>ACTUAL TRACKING — COMING SOON</span>
                 </div>
               </div>
             )}
@@ -320,7 +320,7 @@ export default function DiningDollars() {
                           <p style={{ fontFamily:"'Inter',sans-serif",fontWeight:500,fontSize:'0.88rem',color:'#1a1a1a',margin:'0 0 1px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>
                             {t.location || cat?.label || 'Transaction'}
                           </p>
-                          <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.05em',color:'#9CA3AF',margin:0 }}>{cat?.label} · {t.date}</p>
+                          <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.05em',color:'#9CA3AF',margin:0 }}>{cat?.label} · {t.date}</p>
                         </div>
                         <span style={{ fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'0.9rem',color:'#D42B2B',flexShrink:0 }}>-${parseFloat(t.amount).toFixed(2)}</span>
                       </div>

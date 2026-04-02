@@ -191,25 +191,25 @@ const st = {
   progressLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.78rem', letterSpacing: '0.1em', color: '#9CA3AF' },
   progressPct: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.78rem', color: '#D42B2B' },
   progressTrack: { height: '5px', background: 'rgba(0,0,0,0.08)', borderRadius: '99px', overflow: 'hidden' },
-  eyebrow: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.14em', color: '#D42B2B', display: 'block', marginBottom: '8px' },
+  eyebrow: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.14em', color: '#D42B2B', display: 'block', marginBottom: '8px' },
   heading: { fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.7rem, 4vw, 2.2rem)', fontWeight: 700, color: '#1a1a1a', marginBottom: '8px', lineHeight: 1.15 },
   sub: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.88rem', letterSpacing: '0.03em', color: '#6B7280', marginBottom: '1.8rem', lineHeight: 1.65 },
   card: (sel) => ({ background: sel ? '#FBF2D8' : '#fff', border: `2px solid ${sel ? '#1a1a1a' : 'rgba(0,0,0,0.12)'}`, borderRadius: '10px', padding: '1.2rem', cursor: 'pointer', textAlign: 'left', width: '100%', boxShadow: sel ? '4px 5px 0px #1a1a1a' : '2px 3px 0px rgba(0,0,0,0.08)', transform: sel ? 'translate(-1px,-1px)' : 'none', transition: 'all 0.12s ease' }),
   planCard: (sel) => ({ background: sel ? '#FBF2D8' : '#fff', border: `2px solid ${sel ? '#1a1a1a' : 'rgba(0,0,0,0.1)'}`, borderRadius: '10px', padding: '1rem 1.2rem', cursor: 'pointer', textAlign: 'left', width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: sel ? '4px 5px 0px #1a1a1a' : '2px 3px 0px rgba(0,0,0,0.07)', transform: sel ? 'translate(-1px,-1px)' : 'none', marginBottom: '10px', transition: 'all 0.12s ease' }),
-  chip: (sel) => ({ padding: '5px 14px', borderRadius: '99px', border: `1.5px solid ${sel ? '#1a1a1a' : 'rgba(0,0,0,0.15)'}`, fontSize: '0.75rem', fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.06em', cursor: 'pointer', background: sel ? '#FFE45C' : '#fff', color: '#1a1a1a', boxShadow: sel ? '2px 2px 0px #1a1a1a' : 'none', marginBottom: '6px', transition: 'all 0.12s ease' }),
+  chip: (sel) => ({ padding: '5px 14px', borderRadius: '99px', border: `1.5px solid ${sel ? '#1a1a1a' : 'rgba(0,0,0,0.15)'}`, fontSize: '0.84rem', fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '0.06em', cursor: 'pointer', background: sel ? '#FFE45C' : '#fff', color: '#1a1a1a', boxShadow: sel ? '2px 2px 0px #1a1a1a' : 'none', marginBottom: '6px', transition: 'all 0.12s ease' }),
   input: { width: '100%', padding: '10px 14px', border: '2px solid rgba(0,0,0,0.12)', borderRadius: '8px', fontSize: '0.9rem', fontFamily: "'Inter', sans-serif", background: '#fff', color: '#1a1a1a', outline: 'none', boxSizing: 'border-box', boxShadow: '2px 3px 0px rgba(0,0,0,0.07)' },
   label: { display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.82rem', letterSpacing: '0.1em', color: '#6B7280', marginBottom: '6px' },
   hint: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.8rem', letterSpacing: '0.03em', color: '#9CA3AF', marginTop: '4px' },
   btnPrimary: { flex: 1, padding: '0.85rem 1.5rem', background: '#D42B2B', color: '#fff', border: '2.5px solid #1a1a1a', borderRadius: '8px', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.95rem', letterSpacing: '0.07em', cursor: 'pointer', boxShadow: '3px 4px 0px #1a1a1a', transition: 'all 0.12s ease' },
   btnSecondary: { padding: '0.85rem 1.25rem', background: '#FBF2D8', color: '#1a1a1a', border: '2px solid rgba(0,0,0,0.18)', borderRadius: '8px', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.95rem', letterSpacing: '0.07em', cursor: 'pointer', boxShadow: '2px 3px 0px rgba(0,0,0,0.08)', transition: 'all 0.12s ease' },
   btnDisabled: { flex: 1, padding: '0.85rem 1.5rem', background: 'rgba(0,0,0,0.06)', color: 'rgba(0,0,0,0.25)', border: '2px solid rgba(0,0,0,0.08)', borderRadius: '8px', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.95rem', letterSpacing: '0.07em', cursor: 'not-allowed' },
-  pathPill: { display: 'inline-block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.1em', padding: '3px 12px', borderRadius: '99px', background: '#FFE45C', border: '1.5px solid #1a1a1a', color: '#1a1a1a', marginBottom: '1rem', boxShadow: '2px 2px 0px #1a1a1a' },
+  pathPill: { display: 'inline-block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.1em', padding: '3px 12px', borderRadius: '99px', background: '#FFE45C', border: '1.5px solid #1a1a1a', color: '#1a1a1a', marginBottom: '1rem', boxShadow: '2px 2px 0px #1a1a1a' },
   sectionLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.82rem', letterSpacing: '0.1em', color: '#6B7280', display: 'block', margin: '1.4rem 0 0.7rem' },
   noticeBox: (variant = 'cream') => ({ background: variant === 'red' ? '#FFF0EE' : variant === 'blue' ? '#EFF6FF' : '#FBF2D8', border: `2px solid ${variant === 'red' ? '#D42B2B' : variant === 'blue' ? '#3B82F6' : '#1a1a1a'}`, borderRadius: '8px', padding: '12px 16px', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.82rem', letterSpacing: '0.04em', color: variant === 'red' ? '#D42B2B' : variant === 'blue' ? '#1D4ED8' : '#1a1a1a', marginBottom: '1rem', boxShadow: `3px 3px 0px ${variant === 'red' ? '#D42B2B' : variant === 'blue' ? '#3B82F6' : '#1a1a1a'}` }),
   summaryCard: { background: '#fff', border: '2px solid rgba(0,0,0,0.09)', borderRadius: '10px', padding: '1.1rem 1.2rem', marginBottom: '10px', boxShadow: '3px 4px 0px rgba(0,0,0,0.06)' },
-  summaryLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.12em', color: '#9CA3AF', display: 'block', marginBottom: '6px' },
-  badgeRed: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.08em', padding: '2px 8px', borderRadius: '4px', border: '1.5px solid #1a1a1a', background: '#D42B2B', color: '#fff', display: 'inline-block' },
-  badgeYellow: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.08em', padding: '2px 8px', borderRadius: '4px', border: '1.5px solid #1a1a1a', background: '#FFE45C', color: '#1a1a1a', display: 'inline-block' },
+  summaryLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.12em', color: '#9CA3AF', display: 'block', marginBottom: '6px' },
+  badgeRed: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.08em', padding: '2px 8px', borderRadius: '4px', border: '1.5px solid #1a1a1a', background: '#D42B2B', color: '#fff', display: 'inline-block' },
+  badgeYellow: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.08em', padding: '2px 8px', borderRadius: '4px', border: '1.5px solid #1a1a1a', background: '#FFE45C', color: '#1a1a1a', display: 'inline-block' },
   toggleBtn: (active) => ({ padding: '7px 16px', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.78rem', letterSpacing: '0.06em', cursor: 'pointer', border: '1.5px solid rgba(0,0,0,0.15)', background: active ? '#1a1a1a' : '#fff', color: active ? '#fff' : '#9CA3AF', transition: 'all 0.12s ease' }),
 }
 
@@ -250,7 +250,7 @@ function PlanCard({ plan, selected, onClick, recBadge }) {
           {recBadge && <span style={st.badgeYellow}>RECOMMENDED</span>}
           {!recBadge && plan.tag && <span style={st.badgeRed}>{plan.tag}</span>}
         </div>
-        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.04em', color: '#9CA3AF', display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.04em', color: '#9CA3AF', display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
           <span>{plan.swipes === null ? 'Unlimited swipes' : `${plan.swipes} swipes`}</span>
           <span>${plan.diningDollars} dining dollars</span>
           <span>{plan.guestPasses} guest passes</span>
@@ -346,14 +346,14 @@ function CalendarView({ semesterStart, semesterEnd, breaks, customOffDays, onTog
         {[{ bg: '#D42B2B', border: '1.5px solid #a82020', label: 'Break' }, { bg: '#FFE45C', border: '1.5px solid #c8a800', label: 'Your off days' }, { bg: '#fff', border: '1px solid rgba(0,0,0,0.08)', label: 'On campus' }, { bg: '#F3F4F6', border: 'none', label: 'Outside semester' }].map(({ bg, border, label }) => (
           <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div style={{ width: '14px', height: '14px', background: bg, border, borderRadius: '3px', flexShrink: 0 }} />
-            <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.05em', color: '#6B7280' }}>{label}</span>
+            <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.05em', color: '#6B7280' }}>{label}</span>
           </div>
         ))}
       </div>
       <p style={{ ...st.hint, marginBottom: '12px' }}>
         Click any on-campus day to mark it as off-campus.
         {customOffDays.length > 0 && (
-          <button type="button" onClick={onClearCustom} style={{ marginLeft: '8px', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.05em', color: '#D42B2B', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>CLEAR MY OFF DAYS</button>
+          <button type="button" onClick={onClearCustom} style={{ marginLeft: '8px', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.05em', color: '#D42B2B', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>CLEAR MY OFF DAYS</button>
         )}
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '12px', marginBottom: '14px' }}>
@@ -395,7 +395,7 @@ function SemesterSelector({ value, onChange }) {
           <button key={key} type="button" onClick={() => onChange(key)} style={{ ...st.card(value === key), padding: '1rem', textAlign: 'center' }}>
             <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.08em', color: '#D42B2B', margin: '0 0 2px' }}>{sem.short}</p>
             <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '0.85rem', color: '#1a1a1a', margin: '0 0 2px' }}>{sem.label}</p>
-            <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.04em', color: '#9CA3AF', margin: 0 }}>
+            <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.04em', color: '#9CA3AF', margin: 0 }}>
               {new Date(sem.start + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – {new Date(sem.end + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
             </p>
           </button>
@@ -636,7 +636,7 @@ export default function Onboarding() {
       <div style={{ ...st.topbar, position: 'sticky', zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ width: '4px', height: '28px', background: '#D42B2B', borderRadius: '2px' }} />
-          <span style={st.logo}>NomNom</span>
+          <span style={st.logo}>SwipeWise</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.8rem', letterSpacing: '0.1em', color: '#9CA3AF' }}>STEP {step} OF {TOTAL_STEPS}</span>
@@ -691,7 +691,8 @@ export default function Onboarding() {
                         const val = e.target.value
                         if (val === '') { set('swipesLeft', val); return }
                         if (!/^\d+$/.test(val)) return
-                        if (parseInt(val) > 225) { set('swipesLeft', '225'); return }
+                        const maxSwipes = selectedPlan?.swipes ?? 225
+                        if (parseInt(val) > maxSwipes) { set('swipesLeft', String(maxSwipes)); return }
                         set('swipesLeft', val)
                       }}
                       style={st.input}
@@ -826,12 +827,12 @@ export default function Onboarding() {
                   {selectedPlan?.swipes !== null && (
                     <div>
                       <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1.4rem', color: '#1a1a1a', margin: '0 0 2px' }}>{answers.swipesLeft || '—'}</p>
-                      <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.08em', color: '#9CA3AF', margin: 0 }}>SWIPES LEFT</p>
+                      <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.08em', color: '#9CA3AF', margin: 0 }}>SWIPES LEFT</p>
                     </div>
                   )}
                   <div>
                     <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1.4rem', color: '#1a1a1a', margin: '0 0 2px' }}>${answers.diningDollarsLeft || '—'}</p>
-                    <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.08em', color: '#9CA3AF', margin: 0 }}>DINING DOLLARS</p>
+                    <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.08em', color: '#9CA3AF', margin: 0 }}>DINING DOLLARS</p>
                   </div>
                 </div>
               </div>
@@ -841,7 +842,7 @@ export default function Onboarding() {
               <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '0.95rem', color: '#1a1a1a', margin: '0 0 3px' }}>
                 {answers.semesterPreset ? SEMESTERS[answers.semesterPreset]?.label : '—'}
               </p>
-              <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.04em', color: '#9CA3AF', margin: 0 }}>
+              <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.04em', color: '#9CA3AF', margin: 0 }}>
                 {effDays} active days · {getBreakOffDays(answers.semesterBreaks).length} break days · {answers.customOffDays.length} custom off days
               </p>
             </div>
@@ -854,7 +855,7 @@ export default function Onboarding() {
                 ].map(({ label, value }) => (
                   <div key={label}>
                     <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1.2rem', color: '#1a1a1a', margin: '0 0 2px' }}>{value}</p>
-                    <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.08em', color: '#9CA3AF', margin: 0 }}>{label}</p>
+                    <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.08em', color: '#9CA3AF', margin: 0 }}>{label}</p>
                   </div>
                 ))}
               </div>

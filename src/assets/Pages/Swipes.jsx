@@ -64,7 +64,7 @@ const st = {
   paceBadge: (pace) => {
     const map = { on_track:{ bg:'#f0f7eb',color:'#2d6a1f',border:'#c8deba',label:'On Pace' }, over:{ bg:'#FFF0EE',color:'#D42B2B',border:'#f0b8b8',label:'Using Fast' }, under:{ bg:'#e6f0ff',color:'#1a4fa0',border:'#b8d0f0',label:'Ahead' } }
     const p = map[pace] || map.on_track
-    return { fontFamily:"'Bebas Neue',sans-serif", fontSize:'0.75rem', letterSpacing:'0.08em', padding:'3px 10px', borderRadius:'99px', background:p.bg, color:p.color, border:`1.5px solid ${p.border}`, display:'inline-block' }
+    return { fontFamily:"'Bebas Neue',sans-serif", fontSize:'0.84rem', letterSpacing:'0.08em', padding:'3px 10px', borderRadius:'99px', background:p.bg, color:p.color, border:`1.5px solid ${p.border}`, display:'inline-block' }
   },
 }
 
@@ -183,7 +183,7 @@ export default function Swipes() {
           {/* Big count + stats */}
           <div style={{ display:'grid',gridTemplateColumns:'auto 1fr',gap:'2.5rem',alignItems:'center',marginTop:'2rem' }}>
             <div>
-              <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.12em',color:'rgba(255,255,255,0.35)',margin:'0 0 4px' }}>SWIPES REMAINING</p>
+              <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.12em',color:'rgba(255,255,255,0.35)',margin:'0 0 4px' }}>SWIPES REMAINING</p>
               {totalSwipes === null ? (
                 <p style={{ fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'clamp(2.8rem,6vw,4.5rem)',color:'#fff',lineHeight:1,margin:'0 0 4px' }}>∞</p>
               ) : (
@@ -233,7 +233,7 @@ export default function Swipes() {
                 boxShadow: isToday ? '3px 3px 0 #1a1a1a' : 'none',
                 opacity: isFuture ? 0.45 : 1,
               }}>
-                <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.08em',color: isToday ? '#D42B2B' : '#9CA3AF',margin:'0 0 6px' }}>
+                <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.08em',color: isToday ? '#D42B2B' : '#9CA3AF',margin:'0 0 6px' }}>
                   {day}{isToday ? ' ·' : ''}
                 </p>
                 {isPast || isToday ? (
@@ -301,7 +301,7 @@ export default function Swipes() {
                         </div>
                         <div style={{ flex:1,minWidth:0 }}>
                           <p style={{ fontFamily:"'Inter',sans-serif",fontWeight:500,fontSize:'0.88rem',color:'#1a1a1a',margin:'0 0 1px' }}>{v?.label}</p>
-                          <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.75rem',letterSpacing:'0.05em',color:'#9CA3AF',margin:0 }}>{s.date} · {s.time}</p>
+                          <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.05em',color:'#9CA3AF',margin:0 }}>{s.date} · {s.time}</p>
                         </div>
                         <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.8rem',letterSpacing:'0.06em',color:'#D42B2B',flexShrink:0 }}>−1 SWIPE</span>
                       </div>

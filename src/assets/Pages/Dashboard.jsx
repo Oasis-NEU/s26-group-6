@@ -88,14 +88,14 @@ const PACE_LABELS = {
 const S = {
   hero: { background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)', color: '#fff', overflow: 'hidden', position: 'relative' },
   heroInner: { maxWidth: '1100px', margin: '0 auto', padding: '2.5rem 2rem', position: 'relative', zIndex: 2 },
-  heroEyebrow: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.14em', color: '#D42B2B', marginBottom: '6px', display: 'block' },
+  heroEyebrow: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.14em', color: '#D42B2B', marginBottom: '6px', display: 'block' },
   heroTitle: { fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 700, color: '#fff', margin: '0 0 6px', lineHeight: 1.1 },
   heroSub: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.9rem', letterSpacing: '0.04em', color: 'rgba(255,255,255,0.5)', margin: 0 },
   heroDot: (color) => ({ width: '8px', height: '8px', borderRadius: '50%', background: color, display: 'inline-block', marginRight: '8px', boxShadow: `0 0 6px ${color}` }),
   statGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginTop: '1.5rem' },
   miniStat: { background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '10px', padding: '12px 16px' },
   miniStatVal: { fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1.8rem', color: '#fff', margin: '0 0 2px', lineHeight: 1 },
-  miniStatLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.45)', margin: 0 },
+  miniStatLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.45)', margin: 0 },
   body: { maxWidth: '1100px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' },
   twoCol: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.2rem' },
   threeCol: { display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.2rem' },
@@ -106,7 +106,7 @@ const S = {
   progressTrack: { height: '8px', background: 'rgba(0,0,0,0.06)', borderRadius: '99px', overflow: 'hidden', margin: '10px 0 6px' },
   paceBadge: (pace) => {
     const p = PACE_LABELS[pace] || PACE_LABELS.on_track
-    return { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.08em', padding: '3px 10px', borderRadius: '99px', background: p.bg, color: p.color, border: `1.5px solid ${p.border}`, display: 'inline-block' }
+    return { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.08em', padding: '3px 10px', borderRadius: '99px', background: p.bg, color: p.color, border: `1.5px solid ${p.border}`, display: 'inline-block' }
   },
   actionBtn: (variant = 'default') => ({
     display: 'flex', alignItems: 'center', gap: '10px', width: '100%', padding: '12px 16px',
@@ -148,11 +148,11 @@ function PaceChart({ projWeekly, activeDays }) {
       <div style={{ display: 'flex', gap: '14px', marginTop: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <div style={{ width: '10px', height: '10px', background: '#FBF2D8', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '2px' }} />
-          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.04em', color: '#9CA3AF' }}>Projected (${projWeekly}/wk)</span>
+          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.04em', color: '#9CA3AF' }}>Projected (${projWeekly}/wk)</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <div style={{ width: '10px', height: '10px', background: '#E5E7EB', border: '1px dashed #9CA3AF', borderRadius: '2px' }} />
-          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.04em', color: '#9CA3AF' }}>Actual — coming soon</span>
+          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.04em', color: '#9CA3AF' }}>Actual — coming soon</span>
         </div>
       </div>
     </div>
@@ -425,8 +425,8 @@ export default function Dashboard() {
                   <div style={{ height: '100%', background: swipePace === 'over_budget' ? '#D42B2B' : '#2d6a1f', width: `${swipePct}%`, borderRadius: '99px', transition: 'width 0.6s ease' }} />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.06em', color: '#9CA3AF' }}>{swipePct}% remaining</span>
-                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.06em', color: '#9CA3AF' }}>
+                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.06em', color: '#9CA3AF' }}>{swipePct}% remaining</span>
+                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.06em', color: '#9CA3AF' }}>
                     ~{activeDaysLeft > 0 ? (currentSwipes / activeDaysLeft).toFixed(1) : '—'}/day left to use
                   </span>
                 </div>
@@ -448,8 +448,8 @@ export default function Dashboard() {
               <div style={{ height: '100%', background: ddPace === 'over_budget' ? '#D42B2B' : '#2d6a1f', width: `${ddPct}%`, borderRadius: '99px', transition: 'width 0.6s ease' }} />
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.06em', color: '#9CA3AF' }}>{ddPct}% remaining</span>
-              <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.06em', color: '#9CA3AF' }}>
+              <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.06em', color: '#9CA3AF' }}>{ddPct}% remaining</span>
+              <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.06em', color: '#9CA3AF' }}>
                 ${activeDaysLeft > 0 ? (currentDD / activeDaysLeft).toFixed(2) : '—'}/day left to spend
               </span>
             </div>
@@ -488,8 +488,8 @@ export default function Dashboard() {
             </button>
             <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.08em', color: '#9CA3AF' }}>SEMESTER PROGRESS</span>
-                <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.06em', color: '#1a1a1a' }}>{Math.round(pctElapsed * 100)}%</span>
+                <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.08em', color: '#9CA3AF' }}>SEMESTER PROGRESS</span>
+                <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.06em', color: '#1a1a1a' }}>{Math.round(pctElapsed * 100)}%</span>
               </div>
               <div style={S.progressTrack}>
                 <div style={{ height: '100%', background: '#1a1a1a', width: `${pctElapsed * 100}%`, borderRadius: '99px', transition: 'width 0.6s ease' }} />
@@ -523,7 +523,7 @@ export default function Dashboard() {
                 return (
                   <div key={i} style={{ background: '#fff', border: '2px solid rgba(0,0,0,0.08)', borderRadius: '10px', padding: '12px 14px', boxShadow: '2px 3px 0 rgba(0,0,0,0.05)' }}>
                     <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: '0.88rem', color: '#1a1a1a', margin: '0 0 4px', lineHeight: 1.3 }}>{item.name}</p>
-                    <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.75rem', letterSpacing: '0.05em', color: '#9CA3AF', margin: '0 0 6px' }}>
+                    <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.05em', color: '#9CA3AF', margin: '0 0 6px' }}>
                       {item.station}{cal ? ` · ${cal} cal` : ''}
                     </p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
