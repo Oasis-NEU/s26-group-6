@@ -16,8 +16,8 @@ const inputCls = {
   transition: 'border-color 0.15s',
 }
 
-const DIET_OPTIONS = ['Vegetarian', 'Vegan', 'Halal', 'Kosher', 'Gluten-Free', 'Dairy-Free', 'Nut-Free']
-const CUISINE_OPTIONS = ['American', 'Asian', 'Indian', 'Italian', 'Mediterranean', 'Mexican']
+const DIET_OPTIONS = []
+const CUISINE_OPTIONS = []
 const PLAN_OPTIONS = [
   { id: 'unlimited', label: 'NU – Unlimited' },
   { id: '225',       label: 'NU – 225' },
@@ -228,14 +228,14 @@ export default function Login() {
               </div>
 
               <div>
-                <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: '#9CA3AF', margin: '0 0 8px' }}>DIETARY PREFERENCES</p>
+                <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: '#9CA3AF', margin: '0 0 8px' }}></p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                   {DIET_OPTIONS.map(opt => <Chip key={opt} label={opt} selected={diet.includes(opt)} onToggle={() => toggleArr(diet, setDiet, opt)} />)}
                 </div>
               </div>
 
               <div>
-                <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: '#9CA3AF', margin: '0 0 8px' }}>CUISINE PREFERENCES</p>
+                <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: '#9CA3AF', margin: '0 0 8px' }}></p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                   {CUISINE_OPTIONS.map(opt => <Chip key={opt} label={opt} selected={cuisine.includes(opt)} onToggle={() => toggleArr(cuisine, setCuisine, opt)} />)}
                 </div>

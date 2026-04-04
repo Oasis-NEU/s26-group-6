@@ -39,7 +39,7 @@ const SEMESTERS = {
 }
 
 const DIET_OPTIONS = ['Vegetarian', 'Vegan', 'Halal', 'Kosher', 'Gluten-Free', 'Dairy-Free', 'Nut-Free', 'High Protein', 'Low Carb', 'Low Calorie', 'Low Sodium']
-const CUISINE_OPTIONS = ['American', 'Asian', 'Indian', 'Italian', 'Mediterranean', 'Mexican', 'Middle Eastern', 'Japanese', 'Korean', 'Thai', 'Ethiopian']
+const CUISINE_OPTIONS = ['American', 'Asian', 'Indian', 'Italian', 'Mediterranean', 'Mexican', 'Middle Eastern', 'Japanese', 'Korean', 'Thai']
 const ALLERGEN_OPTIONS = ['Peanuts', 'Tree Nuts', 'Shellfish', 'Fish', 'Eggs', 'Soy', 'Wheat', 'Sesame', 'Milk']
 const SPICE_OPTIONS = ['None', 'Mild', 'Medium', 'Spicy', 'Extra Spicy']
 const PORTION_OPTIONS = ['Small', 'Regular', 'Large']
