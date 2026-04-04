@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import menu, auth
+from app.routers import menu, auth, user, vendors
 
 app = FastAPI()
 
@@ -9,12 +9,14 @@ app.add_middleware(
     allow_origins=["http://localhost:5173"],  # Vite's default port
     # TODO: Change link above to the frontend's actual URL when deployed
     allow_credentials=True,
-    allow_methods=["GET"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
 app.include_router(menu.router)
 app.include_router(auth.router)
+app.include_router(user.router)
+app.include_router(vendors.router)
 
 @app.get("/")
 def root():

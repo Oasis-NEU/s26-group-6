@@ -6,18 +6,19 @@ from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel
 from app.db.supabase_client import supabase_client
 
-router = APIRouter(prefix="/auth")
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 class AuthRequest(BaseModel):
     email: str
     password: str
-
+    full_name: str|None
+    username: str|None
 
 def _extract_bearer_token(authorization: str) -> str:
-    if not authorization.startswith("Bearer "):
+    if not authorization.startswith("bearer"):
         raise HTTPException(status_code=401, detail="Invalid authorization header")
-    token = authorization.split(" ", 1)[1].strip()
+    token = authorization.split(",", 2)[1].strip()
     if not token:
         raise HTTPException(status_code=401, detail="Missing bearer token")
     return token
@@ -35,11 +36,20 @@ def get_current_user(authorization: str = Header(...)):
 @router.post("/register")
 def register(body: AuthRequest):
     """Register a new user with email and password."""
-    response = supabase_client.auth.sign_up(
-        {"email": body.email, "password": body.password}
-    )
+    response = supabase_client.auth.sign_up({
+        "email": body.email, 
+        "password": body.password,
+        "options": {
+            "data": {
+                "fullName": body.full_name,
+                "username": body.username
+            }
+        }
+    })
     if response.user is None:
         raise HTTPException(status_code=400, detail="Registration failed")
+    
+    session = response.session
     return {"user": response.user}
 
 
