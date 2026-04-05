@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import callumPhoto from '../Callum.jpg'
-import aaravPhoto from '../Aarav.jpeg'
-import namanPhoto from '../Naman.png'
-import tanPhoto from '../Tan.jpeg'
-import emanuelPhoto from '../Emanuel.jpeg'
+import callumPhoto from '../callum_new.jpg';
+import nPhoto from '../naman.png';
+import ePhoto from '../emanuel.jpeg';
+import aPhoto from '../aarav.jpeg';
+import tPhoto from '../tan.jpeg';
 import './Home.css';
 
 export default function Home() {
@@ -733,7 +733,13 @@ export default function Home() {
               const tilts = [-4,7,-9,6,-3], hues = [215,285,30,160,0], sats = [55,45,60,50,60], lights = [52,50,50,45,50];
               const roles = ['Frontend / Design','Backend / Data Analysis','Product / UX','Backend / Data Analysis','Fullstack'];
               const names = ['Naman Patel', 'Callum Johnson', 'Aarav Gandbhir', 'Tan Matalon', 'Emanuel Galindo Garcia'];
-              const photos = [namanPhoto, callumPhoto, aaravPhoto, tanPhoto, emanuelPhoto];
+              const photos = [
+                nPhoto,
+                callumPhoto,
+                aPhoto,
+                tPhoto,
+                ePhoto,
+              ];
               const githubs = [
                 'https://github.com/namanp07',
                 'https://github.com/CallumJ25',
