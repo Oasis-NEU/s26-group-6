@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { login, register, addMealPlan } from '../Components/APICalls'
 
 const inputCls = {
   width: '100%',
@@ -24,49 +25,11 @@ const PLAN_OPTIONS = [
   { id: '100',       dd:'200',       label: 'NU - 100' },
 ]
 
-async function login({ email, password }) {
-  const response = await fetch('http://localhost:8000/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: email,
-      password: password,
-      full_name: null,
-      username: null
-    })
-  });
-  return response;
-}
+//where login() was
 
-async function register({ email, password, fullName, username }) {
-  const response = await fetch('http://localhost:8000/auth/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: email,
-      password: password,
-      full_name: fullName,
-      username: username
-    })
-  });
-  return response;
-};
+//where register() was
 
-async function addMealPlan({ sessionToken, planName = null, swipesStart = null, diningDollarsStart = null }) {
-  const response = await fetch('http://localhost:8000/user/update_meal_plan' , {
-  method: 'POST',
-  headers: { 
-    'Content-Type': 'application/json',
-    'authorization': sessionToken
-   },
-  body: JSON.stringify({
-    plan_name: planName,
-    swipes_start: swipesStart,
-    dining_dollars_start: diningDollarsStart,
-    })
-  });
-  return response;
-};
+//where addMealPlan() was
 
 export default function Login() {
   const [tab, setTab] = useState('signin')
@@ -110,24 +73,33 @@ export default function Login() {
       const loginResponseJson = await loginResponse.json()
       console.log(loginResponseJson)
 
-      const tokenStr = `${loginResponseJson.token_type},${loginResponseJson.access_token},${loginResponseJson.token_user}`;
-      console.log(tokenStr);
-
       const mealPlanResponse = await addMealPlan({
-        sessionToken: tokenStr,
         planName, 
         swipesStart, 
         diningDollarsStart: placeholderDD
       });
       console.log(mealPlanResponse);
+
+      if (mealPlanResponse.ok) {
+        navigate('/dashboard'); 
+      } else {
+        navigate('/login'); 
+      };
     };
+  };
 
-    navigate('/dashboard') }
-
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    navigate('/dashboard')
-  }
+    const formData = new FormData(e.target)
+    const email = formData.get('email')
+    const password = formData.get('password')
+    const loginResponse = await login({ email: email, password: password })
+    if (loginResponse.ok) {
+      navigate('/dashboard');
+    } else {
+      navigate('/login');
+    };
+  };
 
 
 
@@ -254,14 +226,14 @@ export default function Login() {
             <form onSubmit={handleSignIn} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
                 <label style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.8rem', letterSpacing: '0.1em', color: '#6B7280', marginBottom: '6px' }}>EMAIL</label>
-                <input type="email" placeholder="you@northeastern.edu" style={inputCls} />
+                <input name="email" type="email" placeholder="you@northeastern.edu" style={inputCls} />
               </div>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                   <label style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.8rem', letterSpacing: '0.1em', color: '#6B7280' }}>PASSWORD</label>
                   <a href="#" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.78rem', letterSpacing: '0.06em', color: '#D42B2B', textDecoration: 'none' }}>FORGOT PASSWORD?</a>
                 </div>
-                <input type="password" placeholder="••••••••" style={inputCls} />
+                <input name="password" type="password" placeholder="••••••••" style={inputCls} />
               </div>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
                 <input type="checkbox" style={{ width: '15px', height: '15px', accentColor: '#D42B2B', cursor: 'pointer' }} />

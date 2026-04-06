@@ -8,6 +8,7 @@ from typing import Any
 from app.db.supabase_client import supabase_client
 from app.routers.auth import get_current_user
 from pydantic import BaseModel
+import json
 
 router = APIRouter(prefix="/user")
 
@@ -70,13 +71,11 @@ class meal_plan_request(BaseModel):
     plan_name: str|None = None
 
 @router.post("/update_meal_plan")
-async def create_meal_plan(
-    body: meal_plan_request,
-    user: Any = Depends(get_current_user)
-):
+async def create_meal_plan(body: meal_plan_request):
     """
     Adds meal plan info to account
     """
+    data = supabase_client.auth.get_user()
 
     update_dict: dict[str,str] = {}
 
@@ -102,7 +101,7 @@ async def create_meal_plan(
         response = (
             supabase_client.table("meal_plans")
             .update(update_dict)
-            .eq("id",user.id)
+            .eq("id",data.user.id)
             .execute()
         )
         return response
@@ -121,28 +120,20 @@ async def delete_user(user: Any = Depends(get_current_user)):
         return response
     except Exception as exception:
         raise HTTPException(status_code=500, detail=str(exception))
-    
-@router.get("/get/")
-async def get_user_info(user: Any = Depends(get_current_user)) -> Exception|APIResponse:
-    try:
-        response = (
-        supabase_client.table("users")
-        .select("*")
-        .eq("id",user.id)
-        .execute()
-        )
-        return response
-    except Exception as exception:
-        raise HTTPException(status_code=500, detail=str(exception))
-    
-@router.get("/get_specific/")
+
+class data_request(BaseModel):
+    column_list: str # json
+    table_name: str # users, meal_plans
+
+@router.get("/get_data/")
 async def get_user_info_specific(
-    columns: list[str],
+    body: data_request, # List of column names in json string format
     user: Any = Depends(get_current_user)
     ) -> Exception|APIResponse:
+    columns = json.loads(body.column_list)
     try:
         response = (
-        supabase_client.table("users")
+        supabase_client.table(body.table_name)
         .select(", ".join(columns))
         .eq("id",user.id)
         .execute()
