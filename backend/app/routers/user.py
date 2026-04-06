@@ -132,7 +132,7 @@ class data_request(BaseModel):
 async def get_user_info_specific(
     body: data_request, # List of column names in json string format
     user: Any = Depends(get_current_user)
-    ) -> Exception|APIResponse:
+    ):
     columns = json.loads(body.column_list)
     try:
         response = (

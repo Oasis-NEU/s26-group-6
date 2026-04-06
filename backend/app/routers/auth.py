@@ -12,8 +12,8 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 class AuthRequest(BaseModel):
     email: str
     password: str
-    full_name: str|None
-    username: str|None
+    full_name: str|None = None
+    username: str|None = None
 
 def _extract_bearer_token(authorization: str) -> str:
     if not authorization.startswith("bearer"):
@@ -36,20 +36,26 @@ def get_current_user(authorization: str = Header(...)):
 @router.post("/register")
 def register(body: AuthRequest):
     """Register a new user with email and password."""
-    response = supabase_client.auth.sign_up({
-        "email": body.email, 
-        "password": body.password,
-        "options": {
-            "data": {
-                "fullName": body.full_name,
-                "username": body.username
+    try:
+        response = supabase_client.auth.sign_up({
+            "email": body.email,
+            "password": body.password,
+            "options": {
+                "data": {
+                    "fullName": body.full_name,
+                    "username": body.username
+                }
             }
-        }
-    })
+        })
+    except Exception as e:
+        err = str(e).lower()
+        if "already registered" in err or "already been registered" in err:
+            raise HTTPException(status_code=409, detail="User already registered")
+        raise HTTPException(status_code=400, detail=str(e))
+
     if response.user is None:
         raise HTTPException(status_code=400, detail="Registration failed")
-    
-    session = response.session
+
     return {"user": response.user}
 
 
@@ -62,13 +68,15 @@ def login(body: AuthRequest):
         )
         if response.session is None:
             raise HTTPException(status_code=401, detail="Invalid credentials")
+    except HTTPException:
+        raise
     except Exception as exception:
-        raise HTTPException(status_code=500, detail=str(exception))
+        raise HTTPException(status_code=401, detail="Invalid credentials")
     return {
         "access_token": response.session.access_token,
         "token_type": "bearer",
         "user": response.user,
-        "token_str": f"{"bearer"},{response.session.access_token},{response.user}"
+        "token_str": f"bearer,{response.session.access_token},{response.user}"
     }
 
 

@@ -46,7 +46,7 @@ const FOOD_TYPE_OPTIONS = ['Bowls & salads', 'Sandwiches & wraps', 'Burgers & wi
 const SPICE_OPTIONS = ['None', 'Mild', 'Medium', 'Spicy', 'Extra Spicy']
 const PORTION_OPTIONS = ['Small', 'Regular', 'Large']
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December']
-const TOTAL_STEPS = 6
+const TOTAL_STEPS = 4
 
 const BREAK_ART = {
   spring_break: (
@@ -182,6 +182,16 @@ function suggestPlan(projSwipes, dollarsPerWeek, effDays) {
   return best
 }
 
+// Check if a break has fully passed
+function isBreakPast(brk) {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const allDates = [...(brk.dates || []), ...(brk.weekendDates || [])]
+  if (!allDates.length) return false
+  const lastDate = new Date(allDates[allDates.length - 1] + 'T12:00:00')
+  return lastDate < today
+}
+
 const st = {
   page: { minHeight: '100vh', background: '#FAF9F6', fontFamily: "'Inter', sans-serif", position: 'relative', overflow: 'hidden' },
   topbar: { background: '#FBF2D8', padding: '0.9rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, overflow: 'visible' },
@@ -189,10 +199,6 @@ const st = {
   exitBtn: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.85rem', letterSpacing: '0.08em', color: '#6B7280', background: 'none', border: 'none', cursor: 'pointer' },
   container: { maxWidth: '600px', margin: '0 auto', padding: '2.5rem 1.5rem 4rem' },
   progressWrap: { marginBottom: '2.5rem' },
-  progressTop: { display: 'flex', justifyContent: 'space-between', marginBottom: '6px' },
-  progressLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.78rem', letterSpacing: '0.1em', color: '#9CA3AF' },
-  progressPct: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.78rem', color: '#D42B2B' },
-  progressTrack: { height: '5px', background: 'rgba(0,0,0,0.08)', borderRadius: '99px', overflow: 'hidden' },
   eyebrow: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '2.2rem', letterSpacing: '0.14em', color: '#D42B2B', display: 'block', marginBottom: '8px' },
   heading: { fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.7rem, 4vw, 2.2rem)', fontWeight: 700, color: '#1a1a1a', marginBottom: '8px', lineHeight: 1.15 },
   sub: { fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.03em', color: '#6B7280', marginBottom: '1.8rem', lineHeight: 1.65 },
@@ -311,22 +317,28 @@ function PlanCard({ plan, selected, onClick, recBadge }) {
 function BreakCard({ brk, onToggleEnabled, onToggleWeekend }) {
   const first = brk.dates[0], last = brk.dates[brk.dates.length - 1]
   const dateRange = `${new Date(first + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${new Date(last + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+  const isPast = isBreakPast(brk)
+
   return (
-    <div style={{ border: `2px solid ${brk.enabled ? '#1a1a1a' : 'rgba(0,0,0,0.1)'}`, borderRadius: '12px', overflow: 'hidden', background: '#fff', boxShadow: brk.enabled ? '4px 5px 0px #1a1a1a' : '2px 3px 0px rgba(0,0,0,0.07)', transform: brk.enabled ? 'translate(-1px,-1px)' : 'none', transition: 'all 0.15s ease', marginBottom: '12px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 16px', cursor: 'pointer', background: brk.enabled ? '#FBF2D8' : '#fff' }} onClick={onToggleEnabled}>
+    <div style={{ border: `2px solid ${brk.enabled ? '#1a1a1a' : 'rgba(0,0,0,0.1)'}`, borderRadius: '12px', overflow: 'hidden', background: isPast ? '#FAFAFA' : '#fff', boxShadow: brk.enabled ? '4px 5px 0px #1a1a1a' : '2px 3px 0px rgba(0,0,0,0.07)', transform: brk.enabled ? 'translate(-1px,-1px)' : 'none', transition: 'all 0.15s ease', marginBottom: '12px', opacity: isPast ? 0.5 : 1 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 16px', cursor: isPast ? 'not-allowed' : 'pointer', background: brk.enabled ? '#FBF2D8' : isPast ? '#FAFAFA' : '#fff' }} onClick={isPast ? undefined : onToggleEnabled}>
         <div style={{ flexShrink: 0, opacity: brk.enabled ? 1 : 0.4, transition: 'opacity 0.2s' }}>{BREAK_ART[brk.id]}</div>
         <div style={{ flex: 1 }}>
           <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1rem', color: '#1a1a1a', margin: '0 0 3px' }}>{brk.label}</p>
-          <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.72rem', letterSpacing: '0.05em', color: '#9CA3AF', margin: 0 }}>{dateRange}</p>
+          <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.72rem', letterSpacing: '0.05em', color: '#9CA3AF', margin: 0 }}>
+            {dateRange}{isPast ? ' · ALREADY PASSED' : ''}
+          </p>
         </div>
-        <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.72rem', letterSpacing: '0.07em', color: brk.enabled ? '#D42B2B' : '#9CA3AF' }}>{brk.enabled ? 'ENABLED' : 'ENABLE'}</span>
-          <div style={{ width: '36px', height: '20px', borderRadius: '99px', background: brk.enabled ? '#D42B2B' : '#E5E7EB', border: '1.5px solid rgba(0,0,0,0.15)', position: 'relative', transition: 'background 0.2s' }}>
-            <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: '#fff', position: 'absolute', top: '2px', left: brk.enabled ? '18px' : '2px', transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+        {!isPast && (
+          <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.72rem', letterSpacing: '0.07em', color: brk.enabled ? '#D42B2B' : '#9CA3AF' }}>{brk.enabled ? 'ENABLED' : 'ENABLE'}</span>
+            <div style={{ width: '36px', height: '20px', borderRadius: '99px', background: brk.enabled ? '#D42B2B' : '#E5E7EB', border: '1.5px solid rgba(0,0,0,0.15)', position: 'relative', transition: 'background 0.2s' }}>
+              <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: '#fff', position: 'absolute', top: '2px', left: brk.enabled ? '18px' : '2px', transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+            </div>
           </div>
-        </div>
+        )}
       </div>
-      {brk.enabled && (
+      {brk.enabled && !isPast && (
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)', padding: '10px 16px', background: '#FAFAFA', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }} onClick={onToggleWeekend}>
           <input type="checkbox" checked={brk.weekendEnabled} onChange={onToggleWeekend} onClick={e => e.stopPropagation()} style={{ width: '15px', height: '15px', accentColor: '#D42B2B', cursor: 'pointer', flexShrink: 0 }} />
           <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.72rem', letterSpacing: '0.06em', color: '#1a1a1a' }}>{brk.weekendLabel}</span>
@@ -337,6 +349,8 @@ function BreakCard({ brk, onToggleEnabled, onToggleWeekend }) {
 }
 
 function MonthCard({ year, month, semesterStart, semesterEnd, breakOffDays, customOffDays, onToggleDay }) {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
   const firstDay = new Date(year, month, 1).getDay()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
   const semStart = new Date(semesterStart + 'T12:00:00')
@@ -362,12 +376,28 @@ function MonthCard({ year, month, semesterStart, semesterEnd, breakOffDays, cust
           const isBreak = breakSet.has(dateStr)
           const isCustom = customSet.has(dateStr)
           const isWeekend = date.getDay() === 0 || date.getDay() === 6
+          const isPast = date < today
+
           let bg = '#F3F4F6', color = '#D1D5DB', border = 'none', cursor = 'default', fontWeight = 400, boxShadow = 'none'
-          if (inSem && !isBreak && !isCustom) { bg = isWeekend ? '#F9F9F9' : '#fff'; color = isWeekend ? '#9CA3AF' : '#1a1a1a'; cursor = 'pointer'; border = '1px solid rgba(0,0,0,0.08)' }
+
+          if (inSem && !isBreak && !isCustom && !isPast) {
+            bg = isWeekend ? '#F9F9F9' : '#fff'
+            color = isWeekend ? '#9CA3AF' : '#1a1a1a'
+            cursor = 'pointer'
+            border = '1px solid rgba(0,0,0,0.08)'
+          } else if (inSem && !isBreak && !isCustom && isPast) {
+            // Past days within semester — grayed out
+            bg = '#F3F4F6'
+            color = '#D1D5DB'
+            cursor = 'not-allowed'
+          }
           if (isBreak) { bg = '#D42B2B'; color = '#fff'; border = '1.5px solid #a82020'; fontWeight = 600; boxShadow = '1px 1px 0 rgba(0,0,0,0.2)' }
-          if (isCustom) { bg = '#FFE45C'; color = '#1a1a1a'; border = '1.5px solid #c8a800'; fontWeight = 600; cursor = 'pointer'; boxShadow = '1px 1px 0 rgba(0,0,0,0.12)' }
+          if (isCustom) { bg = '#FFE45C'; color = '#1a1a1a'; border = '1.5px solid #c8a800'; fontWeight = 600; cursor = isPast ? 'not-allowed' : 'pointer'; boxShadow = '1px 1px 0 rgba(0,0,0,0.12)' }
+
           return (
-            <button key={i} type="button" onClick={() => inSem && !isBreak && onToggleDay(dateStr)} disabled={!inSem || isBreak}
+            <button key={i} type="button"
+              onClick={() => inSem && !isBreak && !isPast && onToggleDay(dateStr)}
+              disabled={!inSem || isBreak || isPast}
               style={{ background: bg, color, border, cursor, fontWeight, boxShadow, borderRadius: '4px', fontFamily: "'Inter', sans-serif", fontSize: '0.7rem', padding: '4px 2px', textAlign: 'center', width: '100%', transition: 'all 0.1s ease' }}>
               {day}
             </button>
@@ -390,7 +420,12 @@ function CalendarView({ semesterStart, semesterEnd, breaks, customOffDays, onTog
   return (
     <div>
       <div style={{ display: 'flex', gap: '14px', marginBottom: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
-        {[{ bg: '#D42B2B', border: '1.5px solid #a82020', label: 'Break' }, { bg: '#FFE45C', border: '1.5px solid #c8a800', label: 'Your off days' }, { bg: '#fff', border: '1px solid rgba(0,0,0,0.08)', label: 'On campus' }, { bg: '#F3F4F6', border: 'none', label: 'Outside semester' }].map(({ bg, border, label }) => (
+        {[
+          { bg: '#D42B2B', border: '1.5px solid #a82020', label: 'Break' },
+          { bg: '#FFE45C', border: '1.5px solid #c8a800', label: 'Days away from campus' },
+          { bg: '#fff', border: '1px solid rgba(0,0,0,0.08)', label: 'On campus' },
+          { bg: '#F3F4F6', border: 'none', label: 'Past / outside semester' },
+        ].map(({ bg, border, label }) => (
           <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div style={{ width: '14px', height: '14px', background: bg, border, borderRadius: '3px', flexShrink: 0 }} />
             <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.66rem', letterSpacing: '0.05em', color: '#6B7280' }}>{label}</span>
@@ -398,9 +433,9 @@ function CalendarView({ semesterStart, semesterEnd, breaks, customOffDays, onTog
         ))}
       </div>
       <p style={{ ...st.hint, marginBottom: '12px' }}>
-        Click any on-campus day to mark it as off-campus.
+        Click any upcoming on-campus day to mark it as a day away from campus.
         {customOffDays.length > 0 && (
-          <button type="button" onClick={onClearCustom} style={{ marginLeft: '8px', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.68rem', letterSpacing: '0.05em', color: '#D42B2B', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>CLEAR MY OFF DAYS</button>
+          <button type="button" onClick={onClearCustom} style={{ marginLeft: '8px', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.68rem', letterSpacing: '0.05em', color: '#D42B2B', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>CLEAR AWAY DAYS</button>
         )}
       </p>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '12px', marginBottom: '14px' }}>
@@ -409,7 +444,11 @@ function CalendarView({ semesterStart, semesterEnd, breaks, customOffDays, onTog
         ))}
       </div>
       <div style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden', border: '2px solid #1a1a1a', boxShadow: '3px 3px 0 #1a1a1a' }}>
-        {[{ label: 'BREAK DAYS', value: totalBreakDays, bg: '#D42B2B', color: '#fff' }, { label: 'YOUR OFF DAYS', value: customOffDays.length, bg: '#FFE45C', color: '#1a1a1a' }, { label: 'ACTIVE DAYS', value: effDays, bg: '#FBF2D8', color: '#1a1a1a' }].map(({ label, value, bg, color }, i) => (
+        {[
+          { label: 'BREAK DAYS', value: totalBreakDays, bg: '#D42B2B', color: '#fff' },
+          { label: 'AWAY DAYS', value: customOffDays.length, bg: '#FFE45C', color: '#1a1a1a' },
+          { label: 'ACTIVE DAYS', value: effDays, bg: '#FBF2D8', color: '#1a1a1a' },
+        ].map(({ label, value, bg, color }, i) => (
           <div key={label} style={{ flex: 1, background: bg, padding: '10px 8px', textAlign: 'center', borderRight: i < 2 ? '2px solid #1a1a1a' : 'none' }}>
             <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1.3rem', color, margin: '0 0 2px' }}>{value}</p>
             <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.6rem', letterSpacing: '0.08em', color, opacity: 0.85, margin: 0 }}>{label}</p>
@@ -477,11 +516,7 @@ function PreferencesStep({ answers, toggleArr, set, onBack, onNext, step, isNewP
       <p style={st.sub}>We'll use these to recommend dining dollar vendors near campus that match your taste, needs, and lifestyle.</p>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: '1.4rem 0 0.7rem' }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 21 C11.4 21 5.8 16.8 6 11 C6.2 5.5 10.2 3.8 12 4 C13.8 3.8 18 5.5 18 11 C18 16.8 12.6 21 12 21Z" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M12 4.5 C11.7 8.5 12.4 13.5 12 21" stroke="#9CA3AF" strokeWidth="1.2" strokeLinecap="round"/>
-          <path d="M9 8.5 Q11 9.5 14 8" stroke="#9CA3AF" strokeWidth="0.9" strokeLinecap="round"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21 C11.4 21 5.8 16.8 6 11 C6.2 5.5 10.2 3.8 12 4 C13.8 3.8 18 5.5 18 11 C18 16.8 12.6 21 12 21Z" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M12 4.5 C11.7 8.5 12.4 13.5 12 21" stroke="#9CA3AF" strokeWidth="1.2" strokeLinecap="round"/><path d="M9 8.5 Q11 9.5 14 8" stroke="#9CA3AF" strokeWidth="0.9" strokeLinecap="round"/></svg>
         <span style={{ ...st.sectionLabel, margin: 0, display: 'inline' }}>DIETARY RESTRICTIONS & GOALS</span>
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '0.5rem' }}>
@@ -489,11 +524,7 @@ function PreferencesStep({ answers, toggleArr, set, onBack, onNext, step, isNewP
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: '1.4rem 0 0.7rem' }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 3.5 L21 20.5 L3 20.5 Z" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <line x1="12" y1="10" x2="12" y2="15" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/>
-          <circle cx="12" cy="17.5" r="0.9" fill="#9CA3AF"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3.5 L21 20.5 L3 20.5 Z" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><line x1="12" y1="10" x2="12" y2="15" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/><circle cx="12" cy="17.5" r="0.9" fill="#9CA3AF"/></svg>
         <span style={{ ...st.sectionLabel, margin: 0, display: 'inline' }}>ALLERGENS TO AVOID</span>
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '0.5rem' }}>
@@ -501,14 +532,7 @@ function PreferencesStep({ answers, toggleArr, set, onBack, onNext, step, isNewP
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: '1.4rem 0 0.7rem' }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="8.5" stroke="#9CA3AF" strokeWidth="1.5"/>
-          <path d="M12 3.5 C11.5 6 9.2 8.5 9 12 C8.8 15.5 11.5 18.5 12 20.5" stroke="#9CA3AF" strokeWidth="1" strokeLinecap="round"/>
-          <path d="M12 3.5 C12.5 6 14.8 8.5 15 12 C15.2 15.5 12.5 18.5 12 20.5" stroke="#9CA3AF" strokeWidth="1" strokeLinecap="round"/>
-          <path d="M3.5 12 L20.5 12" stroke="#9CA3AF" strokeWidth="1" strokeLinecap="round"/>
-          <path d="M5.5 7.5 Q12 9 18.5 7.5" stroke="#9CA3AF" strokeWidth="0.8" strokeLinecap="round"/>
-          <path d="M5.5 16.5 Q12 15 18.5 16.5" stroke="#9CA3AF" strokeWidth="0.8" strokeLinecap="round"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#9CA3AF" strokeWidth="1.5"/><path d="M12 3.5 C11.5 6 9.2 8.5 9 12 C8.8 15.5 11.5 18.5 12 20.5" stroke="#9CA3AF" strokeWidth="1" strokeLinecap="round"/><path d="M12 3.5 C12.5 6 14.8 8.5 15 12 C15.2 15.5 12.5 18.5 12 20.5" stroke="#9CA3AF" strokeWidth="1" strokeLinecap="round"/><path d="M3.5 12 L20.5 12" stroke="#9CA3AF" strokeWidth="1" strokeLinecap="round"/></svg>
         <span style={{ ...st.sectionLabel, margin: 0, display: 'inline' }}>CUISINE PREFERENCES</span>
       </div>
       <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.72rem', letterSpacing: '0.03em', color: '#9CA3AF', margin: '-4px 0 8px' }}>Based on vendors near Northeastern</p>
@@ -517,11 +541,7 @@ function PreferencesStep({ answers, toggleArr, set, onBack, onNext, step, isNewP
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: '1.4rem 0 0.7rem' }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4.5 10.5 C4.5 16.5 7.8 20.5 12 20.5 C16.2 20.5 19.5 16.5 19.5 10.5 Z" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <line x1="3" y1="10.5" x2="21" y2="10.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/>
-          <line x1="10" y1="20.5" x2="14" y2="20.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4.5 10.5 C4.5 16.5 7.8 20.5 12 20.5 C16.2 20.5 19.5 16.5 19.5 10.5 Z" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><line x1="3" y1="10.5" x2="21" y2="10.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/><line x1="10" y1="20.5" x2="14" y2="20.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/></svg>
         <span style={{ ...st.sectionLabel, margin: 0, display: 'inline' }}>WHAT DO YOU USUALLY EAT?</span>
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '0.5rem' }}>
@@ -529,11 +549,7 @@ function PreferencesStep({ answers, toggleArr, set, onBack, onNext, step, isNewP
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: '1.4rem 0 0.7rem' }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="6" width="18" height="13" rx="2" stroke="#9CA3AF" strokeWidth="1.5"/>
-          <line x1="3" y1="11" x2="21" y2="11" stroke="#9CA3AF" strokeWidth="1.5"/>
-          <line x1="7" y1="15.5" x2="11" y2="15.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="#9CA3AF" strokeWidth="1.5"/><line x1="3" y1="11" x2="21" y2="11" stroke="#9CA3AF" strokeWidth="1.5"/><line x1="7" y1="15.5" x2="11" y2="15.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/></svg>
         <span style={{ ...st.sectionLabel, margin: 0, display: 'inline' }}>DINING STYLE</span>
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '0.5rem' }}>
@@ -541,10 +557,7 @@ function PreferencesStep({ answers, toggleArr, set, onBack, onNext, step, isNewP
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: '1.4rem 0 0.7rem' }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 21 C9 21 6 18 6 14 C6 10 8.5 8 10 6 C10 6 9.2 10 12 11 C12 11 10.5 8 14 6 C16 8 18 10.5 18 14 C18 18 15 21 12 21Z" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <path d="M11 15 C11 15 11.5 17.5 13 16.5" stroke="#9CA3AF" strokeWidth="1" strokeLinecap="round"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21 C9 21 6 18 6 14 C6 10 8.5 8 10 6 C10 6 9.2 10 12 11 C12 11 10.5 8 14 6 C16 8 18 10.5 18 14 C18 18 15 21 12 21Z" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
         <span style={{ ...st.sectionLabel, margin: 0, display: 'inline' }}>SPICE PREFERENCE</span>
       </div>
       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
@@ -554,11 +567,7 @@ function PreferencesStep({ answers, toggleArr, set, onBack, onNext, step, isNewP
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', margin: '1.4rem 0 0.7rem' }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4.5 10.5 C4.5 16.5 7.8 20.5 12 20.5 C16.2 20.5 19.5 16.5 19.5 10.5 Z" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <line x1="3" y1="10.5" x2="21" y2="10.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/>
-          <line x1="10" y1="20.5" x2="14" y2="20.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4.5 10.5 C4.5 16.5 7.8 20.5 12 20.5 C16.2 20.5 19.5 16.5 19.5 10.5 Z" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><line x1="3" y1="10.5" x2="21" y2="10.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/><line x1="10" y1="20.5" x2="14" y2="20.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/></svg>
         <span style={{ ...st.sectionLabel, margin: 0, display: 'inline' }}>PORTION SIZE</span>
       </div>
       <div style={{ display: 'flex' }}>
@@ -585,11 +594,7 @@ function HabitsStep({ answers, set, onBack, onNext, step, isNewPlan, selectedPla
       {(isNewPlan || selectedPlan?.swipes !== null) && (
         <div style={{ marginBottom: '1.4rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="6" width="18" height="13" rx="2" stroke="#9CA3AF" strokeWidth="1.5"/>
-              <line x1="3" y1="11" x2="21" y2="11" stroke="#9CA3AF" strokeWidth="1.5"/>
-              <line x1="7" y1="15.5" x2="11" y2="15.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2" stroke="#9CA3AF" strokeWidth="1.5"/><line x1="3" y1="11" x2="21" y2="11" stroke="#9CA3AF" strokeWidth="1.5"/><line x1="7" y1="15.5" x2="11" y2="15.5" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round"/></svg>
             <label style={{ ...st.label, marginBottom: 0 }}>EXPECTED SWIPES</label>
           </div>
           <div style={{ display: 'flex', marginBottom: '8px' }}>
@@ -617,11 +622,7 @@ function HabitsStep({ answers, set, onBack, onNext, step, isNewPlan, selectedPla
 
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="8" stroke="#9CA3AF" strokeWidth="1.5"/>
-            <line x1="12" y1="7.5" x2="12" y2="16.5" stroke="#9CA3AF" strokeWidth="1.3" strokeLinecap="round"/>
-            <path d="M10 9.5 C10 9.5 10.5 8.5 12 8.5 C13.5 8.5 14.5 9.3 14.5 10.5 C14.5 11.7 13 12.3 12 12.8 C11 13.3 9.5 13.9 9.5 15.2 C9.5 16.2 10.5 16.8 12 16.8 C13.5 16.8 14 15.8 14 15.8" stroke="#9CA3AF" strokeWidth="1.2" strokeLinecap="round"/>
-          </svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#9CA3AF" strokeWidth="1.5"/><line x1="12" y1="7.5" x2="12" y2="16.5" stroke="#9CA3AF" strokeWidth="1.3" strokeLinecap="round"/></svg>
           <label style={{ ...st.label, marginBottom: 0 }}>DINING DOLLARS PER WEEK</label>
         </div>
         <div style={{ position: 'relative' }}>
@@ -664,14 +665,14 @@ function SemesterSection({ answers, set, semesterCalendarReady, toggleOffDay }) 
           <span style={st.sectionLabel}>BREAKS — ENABLE THE ONES YOU'LL BE AWAY FOR</span>
           {answers.semesterBreaks.map(brk => (
             <BreakCard key={brk.id} brk={brk}
-              onToggleEnabled={() => toggleBreakEnabled(brk.id)}
+              onToggleEnabled={() => !isBreakPast(brk) && toggleBreakEnabled(brk.id)}
               onToggleWeekend={(e) => { e?.stopPropagation?.(); toggleBreakWeekend(brk.id) }} />
           ))}
         </div>
       )}
       {semesterCalendarReady && (
         <div>
-          <span style={st.sectionLabel}>YOUR SEMESTER — CLICK DAYS TO MARK AS OFF-CAMPUS</span>
+          <span style={st.sectionLabel}>YOUR SEMESTER — CLICK UPCOMING DAYS TO MARK AS AWAY</span>
           <CalendarView
             semesterStart={answers.semesterStart}
             semesterEnd={answers.semesterEnd}
@@ -690,7 +691,7 @@ export default function Onboarding() {
   const navigate = useNavigate()
   const [step, setStep] = useState(1)
   const [answers, setAnswers] = useState({
-    onPlan: null, planId: null,
+    onPlan: true, planId: null,
     swipesLeft: '', diningDollarsLeft: '',
     semesterPreset: null, semesterStart: '', semesterEnd: '2026-04-26',
     semesterBreaks: [], customOffDays: [],
@@ -757,13 +758,6 @@ export default function Onboarding() {
           <path d="M85 35 Q100 35 100 50 Q100 65 85 65"/>
           <line x1="15" y1="25" x2="85" y2="25"/><line x1="30" y1="15" x2="30" y2="25"/><line x1="50" y1="12" x2="50" y2="25"/><line x1="70" y1="15" x2="70" y2="25"/>
         </svg>
-        <svg style={{ position: 'absolute', top: '48%', right: '2%', opacity: 0.045, transform: 'rotate(5deg)' }} width="110" height="80" viewBox="0 0 110 80" fill="none" stroke="#1a1a1a" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M8 30 Q8 70 55 70 Q102 70 102 30"/><line x1="8" y1="30" x2="102" y2="30"/>
-          <line x1="30" y1="70" x2="80" y2="70"/><line x1="55" y1="70" x2="55" y2="78"/><ellipse cx="55" cy="78" rx="22" ry="4"/>
-        </svg>
-        <svg style={{ position: 'absolute', top: '55%', left: '2%', opacity: 0.045, transform: 'rotate(-12deg)' }} width="100" height="100" viewBox="0 0 100 100" fill="none" stroke="#1a1a1a" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-          <ellipse cx="50" cy="50" rx="44" ry="44"/><ellipse cx="50" cy="50" rx="32" ry="32"/><ellipse cx="50" cy="50" rx="16" ry="16"/>
-        </svg>
         <div style={{ position: 'absolute', top: '-40px', left: '50%', transform: 'translateX(-50%)', width: '200px', height: '80px', background: '#FFE45C', opacity: 0.18, borderRadius: '0 0 100px 100px', filter: 'blur(2px)' }} />
         <div style={{ position: 'absolute', bottom: '-40px', left: '50%', transform: 'translateX(-50%)', width: '160px', height: '80px', background: '#D42B2B', opacity: 0.08, borderRadius: '100px 100px 0 0', filter: 'blur(2px)' }} />
       </div>
@@ -783,215 +777,102 @@ export default function Onboarding() {
       <div style={{ ...st.container, position: 'relative', zIndex: 1 }}>
         <ProgressBar step={step} total={TOTAL_STEPS} />
 
-        {step === 1 && (
+        {/* Step 1: Balances */}
+        {answers.onPlan === true && step === 1 && (
           <div>
-            <span style={st.eyebrow}>LET'S GET STARTED</span>
-            <h2 style={st.heading}>Are you currently on a dining plan?</h2>
-            <p style={st.sub}>Tell us where you're at so we can set up the right experience for you.</p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-              {[
-                { val: true,  title: 'Yes, I am',  sub: "I'm currently enrolled in a plan this semester and want to track my balance and usage.", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="16" cy="16" r="12"/><polyline points="10,16 14,20 22,12"/></svg> },
-                { val: false, title: 'Not yet',    sub: "I'm choosing a plan for an upcoming semester and want help finding the right one.", icon: <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="14" cy="14" r="8"/><line x1="20" y1="20" x2="27" y2="27"/></svg> },
-              ].map(({ val, title, sub, icon }) => {
-                const sel = answers.onPlan === val
-                return (
-                  <button key={String(val)} onClick={() => { set('onPlan', val); setTimeout(next, 180) }} style={st.card(sel)}>
-                    <div style={{ color: sel ? '#D42B2B' : '#CBCBCB', marginBottom: '12px', transition: 'color 0.15s' }}>{icon}</div>
-                    <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1rem', color: '#1a1a1a', margin: '0 0 6px' }}>{title}</p>
-                    <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.78rem', letterSpacing: '0.03em', color: '#6B7280', margin: 0, lineHeight: 1.55 }}>{sub}</p>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        )}
-
-        {answers.onPlan === true && step === 2 && (
-          <div>
-            <span style={st.eyebrow}>YOUR PLAN & BALANCES</span>
-            <h2 style={st.heading}>Which plan are you on?</h2>
-            <p style={st.sub}>Select your plan and enter your current balances so we can calculate your pace.</p>
-            {PLANS.map(plan => <PlanCard key={plan.id} plan={plan} selected={answers.planId === plan.id} onClick={() => set('planId', plan.id)} />)}
-            {answers.planId && (
-              <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-                <div style={{ height: '1px', background: 'rgba(0,0,0,0.07)', margin: '0.2rem 0' }} />
-                {selectedPlan?.swipes !== null ? (
-                  <div>
-                    <label style={st.label}>SWIPES REMAINING</label>
-                    <input type="text" inputMode="numeric" placeholder={`e.g. ${Math.floor((selectedPlan?.swipes ?? 225) * 0.6)}`} value={answers.swipesLeft}
-                      onChange={e => {
-                        const val = e.target.value
-                        if (val === '') { set('swipesLeft', val); return }
-                        if (!/^\d+$/.test(val)) return
-                        if (parseInt(val) > (selectedPlan?.swipes ?? 225)) { set('swipesLeft', String(selectedPlan?.swipes ?? 225)); return }
-                        set('swipesLeft', val)
-                      }}
-                      style={st.input}
-                    />
-                    <p style={st.hint}>Your plan started with {selectedPlan?.swipes} swipes.</p>
-                  </div>
-                ) : (
-                  <div style={st.noticeBox()}>UNLIMITED SWIPES — NO TRACKING NEEDED. WE'LL FOCUS ON YOUR DINING DOLLARS.</div>
-                )}
-                <div>
-                  <label style={st.label}>DINING DOLLARS REMAINING</label>
-                  <div style={{ position: 'relative' }}>
-                    <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF', fontSize: '0.9rem' }}>$</span>
-                    <input type="text" inputMode="decimal" placeholder={`e.g. ${Math.floor((selectedPlan?.diningDollars ?? 600) * 0.6)}`} value={answers.diningDollarsLeft}
-                      onChange={e => {
-                        const val = e.target.value
-                        if (val === '') { set('diningDollarsLeft', val); return }
-                        if (!/^\d*\.?\d*$/.test(val)) return
-                        const parts = val.split('.')
-                        if (parts[1] && parts[1].length > 2) return
-                        if (!isNaN(parseFloat(val)) && parseFloat(val) > (selectedPlan?.diningDollars ?? 600)) { set('diningDollarsLeft', String(selectedPlan?.diningDollars ?? 600)); return }
-                        set('diningDollarsLeft', val)
-                      }}
-                      style={{ ...st.input, paddingLeft: '28px' }}
-                    />
-                  </div>
-                  <p style={st.hint}>Your plan started with ${selectedPlan?.diningDollars}.</p>
-                </div>
+            <span style={st.eyebrow}>YOUR CURRENT BALANCES</span>
+            <h2 style={st.heading}>How much do you have left?</h2>
+            <p style={st.sub}>Enter your remaining balances so we can calculate your spending pace for the rest of the semester.</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.4rem' }}>
+              <div>
+                <label style={st.label}>SWIPES REMAINING</label>
+                <input type="text" inputMode="numeric" placeholder="e.g. 80" value={answers.swipesLeft}
+                  onChange={e => {
+                    const val = e.target.value
+                    if (val === '') { set('swipesLeft', val); return }
+                    if (!/^\d+$/.test(val)) return
+                    if (parseInt(val) > 225) { set('swipesLeft', '225'); return }
+                    set('swipesLeft', val)
+                  }}
+                  style={st.input}
+                />
+                <p style={st.hint}>Leave blank if you have an unlimited swipes plan.</p>
               </div>
-            )}
-            <NavButtons step={step} onBack={back} onNext={next} nextDisabled={!answers.planId || !answers.diningDollarsLeft} />
+              <div>
+                <label style={st.label}>DINING DOLLARS REMAINING</label>
+                <div style={{ position: 'relative' }}>
+                  <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF', fontSize: '0.9rem' }}>$</span>
+                  <input type="text" inputMode="decimal" placeholder="e.g. 250.00" value={answers.diningDollarsLeft}
+                    onChange={e => {
+                      const val = e.target.value
+                      if (val === '') { set('diningDollarsLeft', val); return }
+                      if (!/^\d*\.?\d*$/.test(val)) return
+                      const parts = val.split('.')
+                      if (parts[1] && parts[1].length > 2) return
+                      if (!isNaN(parseFloat(val)) && parseFloat(val) > 600) { set('diningDollarsLeft', '600'); return }
+                      set('diningDollarsLeft', val)
+                    }}
+                    style={{ ...st.input, paddingLeft: '28px' }}
+                  />
+                </div>
+                <p style={st.hint}>Check the GET app or Dining portal for your current balance.</p>
+              </div>
+            </div>
+            <NavButtons step={step} onBack={back} onNext={next} nextDisabled={!answers.diningDollarsLeft} />
           </div>
         )}
 
-        {answers.onPlan === true && step === 3 && (
+        {/* "Yes I am" path — Step 3: Semester */}
+        {answers.onPlan === true && step === 2 && (
           <div>
             <span style={st.eyebrow}>SEMESTER</span>
             <h2 style={st.heading}>When is your semester?</h2>
-            <p style={st.sub}>Select your semester and mark any breaks or off-campus days so we can build accurate projections.</p>
+            <p style={st.sub}>Select your semester and mark any breaks or days away so we can build accurate projections.</p>
             <SemesterSection answers={answers} set={set} semesterCalendarReady={semesterCalendarReady} toggleOffDay={toggleOffDay} />
             <NavButtons step={step} onBack={back} onNext={next} nextDisabled={!answers.semesterPreset} />
           </div>
         )}
 
-        {answers.onPlan === true && step === 4 && (
+        {/* "Yes I am" path — Step 4: Preferences */}
+        {answers.onPlan === true && step === 3 && (
           <PreferencesStep answers={answers} toggleArr={toggleArr} set={set} onBack={back} onNext={next} step={step} isNewPlan={false} />
         )}
 
-        {answers.onPlan === true && step === 5 && (
-          <HabitsStep answers={answers} set={set} onBack={back} onNext={next} step={step} isNewPlan={false} selectedPlan={selectedPlan} />
-        )}
-
-        {answers.onPlan === false && step === 2 && (
-          <PreferencesStep answers={answers} toggleArr={toggleArr} set={set} onBack={back} onNext={next} step={step} isNewPlan={true} />
-        )}
-
-        {answers.onPlan === false && step === 3 && (
-          <HabitsStep answers={answers} set={set} onBack={back} onNext={next} step={step} isNewPlan={true} selectedPlan={null} />
-        )}
-
-        {answers.onPlan === false && step === 4 && (
-          <div>
-            <span style={st.pathPill}>FINDING YOU THE RIGHT PLAN</span>
-            <span style={{ display: 'block', ...st.eyebrow }}>SEMESTER DATES</span>
-            <h2 style={st.heading}>When is your semester?</h2>
-            <p style={st.sub}>Select your semester to auto-fill dates and breaks, then mark any additional days you'll be off-campus.</p>
-            <SemesterSection answers={answers} set={set} semesterCalendarReady={semesterCalendarReady} toggleOffDay={toggleOffDay} />
-            <NavButtons step={step} onBack={back} onNext={next} nextLabel="SEE MY RECOMMENDATION" nextDisabled={!answers.semesterPreset} />
-          </div>
-        )}
-
-        {answers.onPlan === false && step === 5 && (() => {
-          const rec = suggestPlan(projSwipes, answers.dollarsPerWeek, effDays)
-          const projPlanDD = Math.round((parseFloat(answers.dollarsPerWeek) || 0) * (effDays / 7))
-          return (
-            <div>
-              <span style={st.pathPill}>FINDING YOU THE RIGHT PLAN</span>
-              <span style={{ display: 'block', ...st.eyebrow }}>PLAN SUGGESTION</span>
-              <h2 style={st.heading}>Here's what we'd recommend</h2>
-              <p style={st.sub}>Based on ~{projSwipes} projected swipes and ~${projPlanDD} in dining dollars over {effDays} active days. You can always pick a different one.</p>
-              {PLANS.map(plan => {
-                const isRec = plan.id === rec?.id
-                const isSelected = answers.planId ? answers.planId === plan.id : isRec
-                const ddDiff = plan.diningDollars - projPlanDD
-                const swipeDiff = plan.swipes !== null ? plan.swipes - projSwipes : null
-                const oop = calcOutOfPocket(answers.dollarsPerWeek, effDays, plan.diningDollars)
-                return (
-                  <div key={plan.id}>
-                    <PlanCard plan={plan} selected={isSelected} onClick={() => set('planId', plan.id)} recBadge={isRec} />
-                    {isSelected && (
-                      <div style={{ marginTop: '-6px', marginBottom: '10px', padding: '8px 14px', background: '#FBF2D8', border: '1px solid rgba(0,0,0,0.08)', borderTop: 'none', borderRadius: '0 0 8px 8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.7rem', letterSpacing: '0.04em', color: '#6B7280' }}>
-                          {swipeDiff !== null ? swipeDiff >= 0 ? `+${swipeDiff} SWIPES TO SPARE` : `${Math.abs(swipeDiff)} SWIPES SHORT` : 'UNLIMITED SWIPES'}
-                          {' · '}
-                          {ddDiff >= 0 ? `+$${ddDiff} DINING DOLLARS TO SPARE` : `$${Math.abs(ddDiff)} SHORT ON DINING DOLLARS`}
-                        </span>
-                        {oop > 0 && (
-                          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.7rem', letterSpacing: '0.04em', color: '#D42B2B' }}>
-                            ~${Math.round(oop)} WOULD NEED TO COME OUT OF POCKET THIS SEMESTER
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-              <NavButtons step={step} onBack={back} onNext={next} nextLabel="LOOKS GOOD" />
-            </div>
-          )
-        })()}
-
-        {step === 6 && (
+        {/* "Yes I am" path — Step 5: Summary */}
+        {answers.onPlan === true && step === 4 && (
           <div>
             <span style={st.eyebrow}>ALL DONE</span>
             <h2 style={st.heading}>Here's your summary</h2>
             <p style={st.sub}>Confirm everything looks right before we set up your dashboard.</p>
             <div style={st.summaryCard}>
-              <span style={st.summaryLabel}>DINING PLAN</span>
-              <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1rem', color: '#1a1a1a', margin: '0 0 3px' }}>{selectedPlan?.name ?? '—'}</p>
-              <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.78rem', letterSpacing: '0.04em', color: '#9CA3AF', margin: 0 }}>
-                {selectedPlan?.swipes === null ? 'Unlimited swipes' : `${selectedPlan?.swipes} swipes`} · ${selectedPlan?.diningDollars} dining dollars · ${selectedPlan?.price?.toLocaleString()}/semester
-              </p>
-            </div>
-            {answers.onPlan && (
-              <div style={st.summaryCard}>
-                <span style={st.summaryLabel}>CURRENT BALANCES</span>
-                <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-                  {selectedPlan?.swipes !== null && (
-                    <div>
-                      <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1.4rem', color: '#1a1a1a', margin: '0 0 2px' }}>{answers.swipesLeft || '—'}</p>
-                      <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.68rem', letterSpacing: '0.08em', color: '#9CA3AF', margin: 0 }}>SWIPES LEFT</p>
-                    </div>
-                  )}
+              <span style={st.summaryLabel}>CURRENT BALANCES</span>
+              <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+                {answers.swipesLeft && (
                   <div>
-                    <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1.4rem', color: '#1a1a1a', margin: '0 0 2px' }}>${answers.diningDollarsLeft || '—'}</p>
-                    <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.68rem', letterSpacing: '0.08em', color: '#9CA3AF', margin: 0 }}>DINING DOLLARS</p>
+                    <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1.4rem', color: '#1a1a1a', margin: '0 0 2px' }}>{answers.swipesLeft}</p>
+                    <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.68rem', letterSpacing: '0.08em', color: '#9CA3AF', margin: 0 }}>SWIPES LEFT</p>
                   </div>
+                )}
+                <div>
+                  <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1.4rem', color: '#1a1a1a', margin: '0 0 2px' }}>${answers.diningDollarsLeft || '—'}</p>
+                  <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.68rem', letterSpacing: '0.08em', color: '#9CA3AF', margin: 0 }}>DINING DOLLARS</p>
                 </div>
               </div>
-            )}
+            </div>
             <div style={st.summaryCard}>
               <span style={st.summaryLabel}>SEMESTER</span>
               <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '0.95rem', color: '#1a1a1a', margin: '0 0 3px' }}>
                 {answers.semesterPreset ? SEMESTERS[answers.semesterPreset]?.label : '—'}
               </p>
               <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.84rem', letterSpacing: '0.04em', color: '#9CA3AF', margin: 0 }}>
-                {effDays} active days · {getBreakOffDays(answers.semesterBreaks).length} break days · {answers.customOffDays.length} custom off days
+                {effDays} active days · {getBreakOffDays(answers.semesterBreaks).length} break days · {answers.customOffDays.length} days away
               </p>
             </div>
-            <div style={st.summaryCard}>
-              <span style={st.summaryLabel}>PROJECTIONS</span>
-              <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-                {[
-                  { label: 'PROJ. SWIPES', value: projSwipes },
-                  { label: 'PROJ. DINING $', value: `$${Math.round((parseFloat(answers.dollarsPerWeek) || 0) * (effDays / 7))}` },
-                ].map(({ label, value }) => (
-                  <div key={label}>
-                    <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: '1.2rem', color: '#1a1a1a', margin: '0 0 2px' }}>{value}</p>
-                    <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.68rem', letterSpacing: '0.08em', color: '#9CA3AF', margin: 0 }}>{label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            {(answers.diet.length > 0 || answers.cuisines.length > 0 || answers.allergens.length > 0 || answers.foodTypes.length > 0 || answers.diningStyle.length > 0) && (
+            {(answers.diet.length > 0 || answers.cuisines.length > 0 || answers.allergens.length > 0 || (answers.foodTypes || []).length > 0 || (answers.diningStyle || []).length > 0) && (
               <div style={st.summaryCard}>
                 <span style={st.summaryLabel}>PREFERENCES</span>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {[...answers.diet, ...answers.cuisines, ...answers.allergens, ...answers.foodTypes, ...answers.diningStyle].map(tag => (
+                  {[...answers.diet, ...answers.cuisines, ...answers.allergens, ...(answers.foodTypes || []), ...(answers.diningStyle || [])].map(tag => (
                     <span key={tag} style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.7rem', letterSpacing: '0.06em', padding: '3px 10px', borderRadius: '99px', background: '#FFE45C', border: '1.5px solid #1a1a1a', color: '#1a1a1a' }}>{tag}</span>
                   ))}
                 </div>

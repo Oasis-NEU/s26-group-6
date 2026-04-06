@@ -32,10 +32,10 @@ export default function Nav() {
         position: 'sticky', top: 0, zIndex: 1000,
         transition: 'border-color 0.2s, box-shadow 0.2s',
       }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '58px' }}>
+        <div style={{ width: '100%', padding: '0 1.5rem 0 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '58px' }}>
 
-          {/* Logo */}
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', marginLeft: '-6px' }}>
+          {/* Logo — flush left */}
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
             <div style={{ width: '4px', height: '28px', background: '#D42B2B', borderRadius: '2px', flexShrink: 0 }} />
             <span style={{ fontFamily: "'Chicle', serif", fontSize: '1.35rem', fontWeight: 700, color: '#1a1a1a', letterSpacing: '0.01em' }}>SwipeWise</span>
           </Link>
