@@ -17,14 +17,12 @@ const inputCls = {
   transition: 'border-color 0.15s',
 }
 
-const DIET_OPTIONS = []
-const CUISINE_OPTIONS = []
 const PLAN_OPTIONS = [
-  { id: 'unlimited', label: 'NU – Unlimited' },
-  { id: '225',       label: 'NU – 225' },
-  { id: '180',       label: 'NU – 180' },
-  { id: '150',       label: 'NU – 150' },
-  { id: '100',       label: 'NU – 100' },
+  { id: '999',       dd:'400',       label: 'NU - Unlimited' },
+  { id: '225',       dd:'600',       label: 'NU - 225' },
+  { id: '180',       dd:'300',       label: 'NU - 180' },
+  { id: '150',       dd:'200',       label: 'NU - 150' },
+  { id: '100',       dd:'200',       label: 'NU - 100' },
 ]
 
 //where login() was
@@ -223,7 +221,7 @@ export default function Login() {
 
           {/* Sign In form */}
           {tab === 'signin' && (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form onSubmit={handleSignIn} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
                 <label style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '0.8rem', letterSpacing: '0.1em', color: '#6B7280', marginBottom: '6px' }}>EMAIL</label>
                 <input name="email" type="email" placeholder="you@northeastern.edu" style={inputCls} />
@@ -254,45 +252,31 @@ export default function Login() {
 
           {/* Sign Up form */}
           {tab === 'signup' && (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form onSubmit={handleSignUp} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                 <div>
                   <label style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: '#9CA3AF', marginBottom: '6px' }}>FULL NAME</label>
-                  <input type="text" placeholder="Your name" style={inputCls} />
+                  <input name="fullName" type="text" placeholder="Your name" style={inputCls} />
                 </div>
                 <div>
                   <label style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: '#9CA3AF', marginBottom: '6px' }}>USERNAME</label>
-                  <input type="text" placeholder="@username" style={inputCls} />
+                  <input name="username" type="text" placeholder="@username" style={inputCls} />
                 </div>
               </div>
               <div>
                 <label style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: '#9CA3AF', marginBottom: '6px' }}>EMAIL</label>
-                <input type="email" placeholder="you@northeastern.edu" style={inputCls} />
+                <input name="email" type="email" placeholder="you@northeastern.edu" style={inputCls} />
               </div>
               <div>
                 <label style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: '#9CA3AF', marginBottom: '6px' }}>PASSWORD</label>
-                <input type="password" placeholder="Create a password" style={inputCls} />
+                <input name="password" type="password" placeholder="Create a password" style={inputCls} />
               </div>
               <div>
                 <label style={{ display: 'block', fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: '#9CA3AF', marginBottom: '6px' }}>DINING PLAN</label>
-                <select style={{ ...inputCls }}>
+                <select name='diningPlan' style={{ ...inputCls }}>
                   <option value="">Select your plan...</option>
                   {PLAN_OPTIONS.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
                 </select>
-              </div>
-
-              <div>
-                <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: '#9CA3AF', margin: '0 0 8px' }}></p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {DIET_OPTIONS.map(opt => <Chip key={opt} label={opt} selected={diet.includes(opt)} onToggle={() => toggleArr(diet, setDiet, opt)} />)}
-                </div>
-              </div>
-
-              <div>
-                <p style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '1.1rem', letterSpacing: '0.1em', color: '#9CA3AF', margin: '0 0 8px' }}></p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {CUISINE_OPTIONS.map(opt => <Chip key={opt} label={opt} selected={cuisine.includes(opt)} onToggle={() => toggleArr(cuisine, setCuisine, opt)} />)}
-                </div>
               </div>
 
               <button type="submit" style={{
