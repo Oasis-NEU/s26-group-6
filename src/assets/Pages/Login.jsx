@@ -106,6 +106,12 @@ export default function Login() {
       localStorage.setItem('sw_logged_in', 'true')
 
       if (!hasNoPlan) {
+        // Store plan limits so onboarding can cap balance inputs
+        localStorage.setItem('sw_signup_limits', JSON.stringify({
+          swipes: diningPlanId === '999' ? null : Number(diningPlanId),
+          diningDollars: Number(diningPlanObject.dd),
+        }))
+
         await updateMealPlan({
           planName: diningPlanObject.label,
           swipesStart: Number(diningPlanObject.id),
@@ -114,7 +120,7 @@ export default function Login() {
       }
 
       setSignUpSuccess('Account created! Redirecting...')
-      setTimeout(() => navigate(hasNoPlan ? '/onboarding?path=noplan' : '/onboarding'), 1000)
+      setTimeout(() => navigate(hasNoPlan ? '/onboarding?path=noplan' : '/onboarding?path=hasplan'), 1000)
     } catch (err) {
       setSignUpError('You already have an account with this email. Sign in instead.')
     } finally {
