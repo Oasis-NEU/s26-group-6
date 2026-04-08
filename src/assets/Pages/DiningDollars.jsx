@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 
 const API_BASE = 'http://localhost:8000'
 
+const API_BASE = 'http://localhost:8000'
+
 // ── Helpers ───────────────────────────────────────────────────────
 function parseDate(str) { return str ? new Date(str + 'T12:00:00') : null }
 function daysUntil(str) {
@@ -59,40 +61,39 @@ const VENDOR_META = {
   "Amelia's Cluck and Smash": { desc: "Crispy chicken sandwiches and smash burgers", tags: ["American", "BBQ & Wings"] },
   "BaKala'O Kitchenette":     { desc: "Caribbean-Latin fusion cuisine", tags: ["Mexican", "Mediterranean"] },
   "Bangkok Pinto":             { desc: "Authentic Thai food", tags: ["Thai"] },
-  "Blaze Pizza":               { desc: "Fast-fire'd custom pizzas", tags: ["Italian", "Pizza"] },
+  "Blaze Pizza":               { desc: "Fast-fire'd custom pizzas", tags: ["Italian"] },
   "Boston Shawarma":           { desc: "Middle Eastern shawarma and wraps", tags: ["Middle Eastern", "Mediterranean"] },
   "CVS":                       { desc: "Pharmacy and convenience grocery", tags: ["Grocery"] },
-  "Da Vinci Gelato and Waffle": { desc: "Artisan gelato and waffles", tags: ["Italian", "Bakery"] },
+  "Da Vinci Gelato and Waffle": { desc: "Artisan gelato and waffles", tags: ["Italian", "Bakery & pastries"] },
   "El Jefe's Taqueria":        { desc: "Burritos, tacos, and Mexican street food", tags: ["Mexican"] },
-  "Energize":                  { desc: "Smoothies, juices, and healthy drinks", tags: ["Healthy & Salads", "Cafe & Coffee"] },
-  "Five Guys":                 { desc: "Burgers, fries, and hot dogs", tags: ["American", "BBQ & Wings"] },
+  "Energize":                  { desc: "Smoothies, juices, and healthy drinks", tags: ["Healthy & Salads", "Smoothies & juices"] },
+  "Five Guys":                 { desc: "Burgers, fries, and hot dogs", tags: ["American", "Burgers & wings"] },
   "Giovanni's Market":         { desc: "Local grocery and prepared foods", tags: ["Grocery"] },
   "Gyroscope":                 { desc: "Greek and Mediterranean gyros", tags: ["Mediterranean", "Middle Eastern"] },
   "H Mart":                    { desc: "Asian grocery supermarket", tags: ["Grocery", "Asian"] },
   "LUCIE drink + dine":        { desc: "Upscale American dining at the Colonnade", tags: ["American"] },
   "Mamacita Mexican Eats":     { desc: "Tacos, burritos, and Mexican favorites", tags: ["Mexican"] },
-  "Panera Bread":              { desc: "Soups, salads, and sandwiches", tags: ["Sandwiches", "Healthy & Salads", "Cafe & Coffee"] },
-  "Poke Station":              { desc: "Build-your-own poke bowls", tags: ["Poke", "Asian", "Healthy & Salads"] },
+  "Panera Bread":              { desc: "Soups, salads, and sandwiches", tags: ["Sandwiches & wraps", "Healthy & Salads"] },
+  "Poke Station":              { desc: "Build-your-own poke bowls", tags: ["Sushi & poke", "Asian", "Healthy & Salads"] },
   "Qdoba":                     { desc: "Mexican grill — burritos, tacos, bowls", tags: ["Mexican"] },
-  "Sprout":                    { desc: "Fresh healthy bowls and salads", tags: ["Healthy & Salads"] },
+  "Sprout":                    { desc: "Fresh healthy bowls and salads", tags: ["Healthy & Salads", "Bowls & salads"] },
   "Star Market":               { desc: "Full-service grocery store", tags: ["Grocery"] },
-  "Subway":                    { desc: "Custom subs and sandwiches", tags: ["Sandwiches", "American"] },
+  "Subway":                    { desc: "Custom subs and sandwiches", tags: ["Sandwiches & wraps", "American"] },
   "Symphony Market":           { desc: "Neighborhood grocery and deli", tags: ["Grocery"] },
-  "TeaDo":                     { desc: "Bubble tea and Asian drinks", tags: ["Bubble Tea", "Asian"] },
-  "University House of Pizza": { desc: "Classic Boston pizza and subs", tags: ["Pizza", "American"] },
+  "TeaDo":                     { desc: "Bubble tea and Asian drinks", tags: ["Bubble tea & drinks", "Asian"] },
+  "University House of Pizza": { desc: "Classic Boston pizza and subs", tags: ["Italian", "American"] },
   "Wings Over Boston":         { desc: "Chicken wings with tons of sauces", tags: ["BBQ & Wings", "American"] },
   "Anna's Taqueria":           { desc: "Beloved Boston burrito chain", tags: ["Mexican"] },
-  "Dunkin'":                   { desc: "Coffee, donuts, and breakfast", tags: ["Cafe & Coffee", "Bakery"] },
+  "Dunkin'":                   { desc: "Coffee, donuts, and breakfast", tags: ["Cafe & Coffee", "Bakery & pastries"] },
   "Equator Coffees":           { desc: "Specialty coffee, ethically sourced", tags: ["Cafe & Coffee"] },
   "Faculty Club":              { desc: "Campus dining with full menu", tags: ["American"] },
   "Fuel America":              { desc: "Coffee and grab-and-go snacks", tags: ["Cafe & Coffee"] },
-  "Juicygreens":               { desc: "Salads, wraps, and healthy bowls", tags: ["Healthy & Salads"] },
+  "Juicygreens":               { desc: "Salads, wraps, and healthy bowls", tags: ["Healthy & Salads", "Bowls & salads"] },
   "Modern Market":             { desc: "Fresh seasonal American cuisine", tags: ["American", "Healthy & Salads"] },
   "Saxbys":                    { desc: "Coffee and light bites", tags: ["Cafe & Coffee"] },
   "Starbucks":                 { desc: "Coffee, teas, and snacks", tags: ["Cafe & Coffee"] },
-  "Tatte Bakery and Cafe":     { desc: "Artisan pastries and Israeli-inspired dishes", tags: ["Bakery", "Cafe & Coffee", "Mediterranean"] },
+  "Tatte Bakery and Cafe":     { desc: "Artisan pastries and Israeli-inspired dishes", tags: ["Bakery & pastries", "Cafe & Coffee", "Mediterranean"] },
   "Wollaston's Market":        { desc: "Campus convenience store and grocery", tags: ["Grocery"] },
-  "Mamacita Mexican Eats":     { desc: "Tacos, burritos, and Mexican favorites", tags: ["Mexican"] },
 }
 
 const st = {
@@ -112,7 +113,7 @@ const st = {
   paceBadge: (pace) => {
     const map = { on_track:{ bg:'#f0f7eb',color:'#2d6a1f',border:'#c8deba',label:'On Pace' }, over:{ bg:'#FFF0EE',color:'#D42B2B',border:'#f0b8b8',label:'Spending Fast' }, under:{ bg:'#e6f0ff',color:'#1a4fa0',border:'#b8d0f0',label:'Ahead' } }
     const p = map[pace] || map.on_track
-    return { fontFamily:"'Bebas Neue',sans-serif", fontSize:'0.84rem', letterSpacing:'0.08em', padding:'3px 10px', borderRadius:'99px', background:p.bg, color:p.color, border:`1.5px solid ${p.border}`, display:'inline-block' }
+    return { fontFamily:"'Bebas Neue',sans-serif", fontSize:'1.2rem', letterSpacing:'0.08em', padding:'3px 10px', borderRadius:'99px', background:p.bg, color:p.color, border:`1.5px solid ${p.border}`, display:'inline-block' }
   },
   filterChip: (active, color) => ({
     padding: '5px 14px', fontFamily: "'Bebas Neue',sans-serif", fontSize: '0.78rem', letterSpacing: '0.07em',
@@ -124,111 +125,64 @@ const st = {
   }),
 }
 
-// ── Vendor Map Component ──────────────────────────────────────────
+// ── Vendor Map ────────────────────────────────────────────────────
 function VendorMap({ vendors, profile }) {
   const mapRef = useRef(null)
   const mapInstanceRef = useRef(null)
   const markersRef = useRef([])
   const [catFilter, setCatFilter] = useState('all')
   const [locFilter, setLocFilter] = useState('all')
-  const [leafletLoaded, setLeafletLoaded] = useState(!!window.L)
   const [isFullscreen, setIsFullscreen] = useState(false)
 
-  // Load Leaflet CSS + JS via CDN
-  useEffect(() => {
-    if (window.L) { setLeafletLoaded(true); return }
-
-    // Add CSS if not already present
-    if (!document.querySelector('link[href*="leaflet"]')) {
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
-      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
-      document.head.appendChild(link)
-    }
-
-    // Add JS if not already present
-    if (!document.querySelector('script[src*="leaflet"]')) {
-      const script = document.createElement('script')
-      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
-      script.onload = () => setLeafletLoaded(true)
-      document.head.appendChild(script)
-    } else {
-      // Script tag exists but may already be loaded
-      const check = setInterval(() => {
-        if (window.L) { setLeafletLoaded(true); clearInterval(check) }
-      }, 100)
-      return () => clearInterval(check)
-    }
-  }, [])
-
-  // Init map — runs after leaflet loads AND mapRef is available
-  useEffect(() => {
-    if (!leafletLoaded || !mapRef.current) return
-    if (mapInstanceRef.current) {
-      // Already initialized, just invalidate size
-      mapInstanceRef.current.invalidateSize()
-      return
-    }
+  // Use callback ref so we know exactly when the div is mounted
+  const setMapRef = (node) => {
+    if (!node || mapInstanceRef.current) return
+    mapRef.current = node
+    if (!window.L) return
     const L = window.L
-    const map = L.map(mapRef.current, { zoomControl: true, scrollWheelZoom: false })
+    const map = L.map(node, { zoomControl: true, scrollWheelZoom: false })
     map.setView([42.3397, -71.0893], 15)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors',
-      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors', maxZoom: 19,
     }).addTo(map)
     mapInstanceRef.current = map
-    // Force size recalc after a tick
     setTimeout(() => map.invalidateSize(), 200)
-  }, [leafletLoaded, mapRef.current])
+  }
 
-  // Update markers when filters or vendors change
   useEffect(() => {
-    if (!leafletLoaded || !mapInstanceRef.current || !vendors.length) return
+    if (!mapInstanceRef.current || !vendors.length) return
     const L = window.L
     const map = mapInstanceRef.current
-
-    // Clear existing markers
     markersRef.current.forEach(m => m.remove())
     markersRef.current = []
-
     const filtered = vendors.filter(v => {
       if (catFilter !== 'all' && v.category !== catFilter) return false
       if (locFilter !== 'all' && v.location_type !== locFilter) return false
       return true
     })
-
     filtered.forEach(v => {
       const color = MAP_COLORS[v.category] || '#6B7280'
       const icon = L.divIcon({
-        html: `<div style="
-          width: 16px; height: 16px; border-radius: 50%;
-          background: ${color}; border: 2.5px solid #fff;
-          box-shadow: 0 2px 5px rgba(0,0,0,0.35);
-        "></div>`,
-        className: '',
-        iconSize: [16, 16],
-        iconAnchor: [8, 8],
-        popupAnchor: [0, -12],
+        html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};border:2.5px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.35);"></div>`,
+        className: '', iconSize: [14, 14], iconAnchor: [7, 7], popupAnchor: [0, -10],
       })
-
       const meta = VENDOR_META[v.name] || {}
       const desc = meta.desc || ''
       const tags = (meta.tags || []).map(t => `<span style="display:inline-block;padding:2px 8px;border-radius:99px;background:#F3F4F6;font-size:0.68rem;font-family:sans-serif;color:#6B7280;margin:0 3px 3px 0;">${t}</span>`).join('')
       const popup = `
-        <div style="font-family: 'Inter', sans-serif; min-width: 200px; padding: 4px 0;">
-          <p style="font-family: sans-serif; font-size: 0.68rem; letter-spacing: 0.08em; color: ${color}; margin: 0 0 3px; text-transform: uppercase; font-weight: 700;">${v.location_type === 'on_campus' ? 'ON CAMPUS' : 'OFF CAMPUS'} · ${v.category}</p>
-          <p style="font-weight: 700; font-size: 1rem; color: #1a1a1a; margin: 0 0 2px;">${v.name}</p>
-          ${desc ? `<p style="font-size: 0.8rem; color: #4B5563; margin: 0 0 5px; line-height: 1.4;">${desc}</p>` : ''}
-          <p style="font-size: 0.75rem; color: #9CA3AF; margin: 0 0 6px;">${v.address}</p>
-          ${tags ? `<div style="margin-bottom: 6px;">${tags}</div>` : ''}
-          ${!v.is_available ? '<p style="font-size: 0.72rem; color: #D42B2B; margin: 0 0 6px; font-weight: 600;">⚠ Currently unavailable</p>' : ''}
-          ${v.website_url ? `<a href="${v.website_url}" target="_blank" rel="noopener noreferrer" style="font-size: 0.78rem; color: #D42B2B; font-weight: 600; text-decoration: none;">Visit Website →</a>` : ''}
-        </div>
-      `
+        <div style="font-family:'Inter',sans-serif;min-width:200px;padding:4px 0;">
+          <p style="font-family:sans-serif;font-size:0.68rem;letter-spacing:0.08em;color:${color};margin:0 0 3px;text-transform:uppercase;font-weight:700;">${v.location_type === 'on_campus' ? 'ON CAMPUS' : 'OFF CAMPUS'} · ${v.category}</p>
+          <p style="font-weight:700;font-size:1rem;color:#1a1a1a;margin:0 0 2px;">${v.name}</p>
+          ${desc ? `<p style="font-size:0.8rem;color:#4B5563;margin:0 0 5px;line-height:1.4;">${desc}</p>` : ''}
+          <p style="font-size:0.75rem;color:#9CA3AF;margin:0 0 6px;">${v.address}</p>
+          ${tags ? `<div style="margin-bottom:6px;">${tags}</div>` : ''}
+          ${!v.is_available ? '<p style="font-size:0.72rem;color:#D42B2B;margin:0 0 6px;font-weight:600;">⚠ Currently unavailable</p>' : ''}
+          ${v.website_url ? `<a href="${v.website_url}" target="_blank" rel="noopener noreferrer" style="font-size:0.78rem;color:#D42B2B;font-weight:600;text-decoration:none;">Visit Website →</a>` : ''}
+        </div>`
       const marker = L.marker([v.latitude, v.longitude], { icon }).addTo(map).bindPopup(popup, { maxWidth: 240 })
       markersRef.current.push(marker)
     })
-  }, [leafletLoaded, vendors, catFilter, locFilter])
+  }, [vendors, catFilter, locFilter])
 
   if (!vendors.length) return null
 
@@ -238,24 +192,38 @@ function VendorMap({ vendors, profile }) {
     return true
   }).length
 
+  // Vendor recommendations
+  const cuisines = profile?.cuisines || []
+  const diet = profile?.diet || []
+  const foodTypes = profile?.foodTypes || []
+  const recs = vendors.filter(v => {
+    const meta = VENDOR_META[v.name]
+    if (!meta) return false
+    const matchesCuisine = cuisines.some(c => meta.tags?.includes(c))
+    const matchesFoodType = foodTypes.some(f => meta.tags?.includes(f))
+    const matchesDiet =
+      (diet.includes('Healthy') && meta.tags?.includes('Healthy & Salads')) ||
+      (diet.includes('Vegan') && ['Juicygreens', 'Sprout', 'Poke Station'].includes(v.name)) ||
+      (diet.includes('Vegetarian') && ['Juicygreens', 'Sprout', 'Poke Station', 'Blaze Pizza', 'Panera Bread'].includes(v.name))
+    return matchesCuisine || matchesFoodType || matchesDiet
+  }).slice(0, 4)
+
   return (
     <div style={st.card}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', flexWrap: 'wrap', gap: '8px' }}>
         <div>
           <span style={st.label}>DINING DOLLAR VENDORS</span>
-          <p style={{ ...st.heading, marginBottom: '0' }}>Where to Spend Near Campus</p>
+          <p style={{ ...st.heading, marginBottom: 0 }}>Where to Spend Near Campus</p>
         </div>
         <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '0.78rem', letterSpacing: '0.06em', color: '#9CA3AF' }}>{visibleCount} LOCATIONS</span>
       </div>
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '1rem' }}>
-        {/* Location type */}
         {[{ id: 'all', label: 'All Locations' }, { id: 'on_campus', label: 'On Campus' }, { id: 'off_campus', label: 'Off Campus' }].map(f => (
           <button key={f.id} onClick={() => setLocFilter(f.id)} style={st.filterChip(locFilter === f.id, '#1a1a1a')}>{f.label}</button>
         ))}
         <div style={{ width: '1px', background: 'rgba(0,0,0,0.1)', margin: '0 4px' }} />
-        {/* Category */}
         {[{ id: 'all', label: 'All', color: '#1a1a1a' }, { id: 'restaurant', label: '🍽 Restaurants', color: '#D42B2B' }, { id: 'cafe', label: '☕ Cafes', color: '#F57F17' }, { id: 'grocery', label: '🛒 Grocery', color: '#2d6a1f' }].map(f => (
           <button key={f.id} onClick={() => setCatFilter(f.id)} style={st.filterChip(catFilter === f.id, f.color)}>{f.label}</button>
         ))}
@@ -263,13 +231,7 @@ function VendorMap({ vendors, profile }) {
 
       {/* Map */}
       <div style={{ borderRadius: '10px', overflow: 'hidden', border: '2px solid rgba(0,0,0,0.09)', height: isFullscreen ? '80vh' : '480px', position: 'relative', transition: 'height 0.3s ease' }}>
-        {!leafletLoaded && (
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F3F4F6', zIndex: 10 }}>
-            <p style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '0.84rem', letterSpacing: '0.1em', color: '#9CA3AF' }}>LOADING MAP...</p>
-          </div>
-        )}
-        <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
-        {/* Fullscreen toggle */}
+        <div ref={setMapRef} style={{ width: '100%', height: '100%' }} />
         <button onClick={() => { setIsFullscreen(f => !f); setTimeout(() => mapInstanceRef.current?.invalidateSize(), 350) }}
           style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 1000, background: '#fff', border: '2px solid rgba(0,0,0,0.15)', borderRadius: '6px', width: '34px', height: '34px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.15)' }}>
           {isFullscreen
@@ -290,47 +252,32 @@ function VendorMap({ vendors, profile }) {
         <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '0.75rem', letterSpacing: '0.06em', color: '#9CA3AF', marginLeft: 'auto' }}>CLICK A PIN FOR DETAILS</span>
       </div>
 
-      {/* Vendor recommendations based on preferences */}
-      {(() => {
-        const cuisines = profile?.cuisines || []
-        const diet = profile?.diet || []
-        if (!cuisines.length && !diet.length) return null
-        const recs = vendors.filter(v => {
-          const meta = VENDOR_META[v.name]
-          if (!meta) return false
-          const matchesCuisine = cuisines.some(c => meta.tags?.includes(c))
-          const matchesDiet = diet.includes('Healthy') && meta.tags?.includes('Healthy & Salads')
-            || diet.includes('Vegan') && ['Juicygreens', 'Sprout', 'Poke Station'].includes(v.name)
-            || diet.includes('Vegetarian') && ['Juicygreens', 'Sprout', 'Poke Station', 'Blaze Pizza', 'Panera Bread'].includes(v.name)
-          return matchesCuisine || matchesDiet
-        }).slice(0, 4)
-        if (!recs.length) return null
-        return (
-          <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(0,0,0,0.07)', paddingTop: '1rem' }}>
-            <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '0.78rem', letterSpacing: '0.1em', color: '#D42B2B', display: 'block', marginBottom: '8px' }}>RECOMMENDED FOR YOU</span>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '8px' }}>
-              {recs.map(v => {
-                const meta = VENDOR_META[v.name] || {}
-                const color = MAP_COLORS[v.category] || '#6B7280'
-                return (
-                  <div key={v.id} style={{ background: '#FAFAFA', border: '1.5px solid rgba(0,0,0,0.08)', borderRadius: '8px', padding: '10px 12px', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                    <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: color, flexShrink: 0, marginTop: '4px' }} />
-                    <div>
-                      <p style={{ fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: '0.85rem', color: '#1a1a1a', margin: '0 0 2px' }}>{v.name}</p>
-                      <p style={{ fontFamily: "'Inter',sans-serif", fontSize: '0.75rem', color: '#6B7280', margin: '0 0 4px', lineHeight: 1.3 }}>{meta.desc || ''}</p>
-                      <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                        {(meta.tags || []).slice(0, 2).map(t => (
-                          <span key={t} style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '0.65rem', letterSpacing: '0.05em', padding: '1px 7px', borderRadius: '99px', background: '#F3F4F6', color: '#6B7280' }}>{t}</span>
-                        ))}
-                      </div>
+      {/* Recommendations */}
+      {recs.length > 0 && (
+        <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(0,0,0,0.07)', paddingTop: '1rem' }}>
+          <span style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '0.78rem', letterSpacing: '0.1em', color: '#D42B2B', display: 'block', marginBottom: '8px' }}>RECOMMENDED FOR YOU</span>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '8px' }}>
+            {recs.map(v => {
+              const meta = VENDOR_META[v.name] || {}
+              const color = MAP_COLORS[v.category] || '#6B7280'
+              return (
+                <div key={v.id} style={{ background: '#FAFAFA', border: '1.5px solid rgba(0,0,0,0.08)', borderRadius: '8px', padding: '10px 12px', display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: color, flexShrink: 0, marginTop: '4px' }} />
+                  <div>
+                    <p style={{ fontFamily: "'Inter',sans-serif", fontWeight: 600, fontSize: '0.85rem', color: '#1a1a1a', margin: '0 0 2px' }}>{v.name}</p>
+                    <p style={{ fontFamily: "'Inter',sans-serif", fontSize: '0.75rem', color: '#6B7280', margin: '0 0 4px', lineHeight: 1.3 }}>{meta.desc || ''}</p>
+                    <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                      {(meta.tags || []).slice(0, 2).map(t => (
+                        <span key={t} style={{ fontFamily: "'Bebas Neue',sans-serif", fontSize: '0.65rem', letterSpacing: '0.05em', padding: '1px 7px', borderRadius: '99px', background: '#F3F4F6', color: '#6B7280' }}>{t}</span>
+                      ))}
                     </div>
                   </div>
-                )
-              })}
-            </div>
+                </div>
+              )
+            })}
           </div>
-        )
-      })()}
+        </div>
+      )}
     </div>
   )
 }
@@ -348,8 +295,7 @@ function LogModal({ onClose, onSave }) {
             <label style={st.label}>AMOUNT</label>
             <div style={{ position:'relative' }}>
               <span style={{ position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',color:'#9CA3AF',fontSize:'0.9rem' }}>$</span>
-              <input
-                type="number" inputMode="decimal" placeholder="0.00" value={form.amount}
+              <input type="number" inputMode="decimal" placeholder="0.00" value={form.amount}
                 onKeyDown={e => ['e','E','+','-'].includes(e.key) && e.preventDefault()}
                 onWheel={e => e.target.blur()}
                 onChange={e => {
@@ -403,14 +349,12 @@ export default function DiningDollars() {
     if (stored) try { setProfile(JSON.parse(stored)) } catch {}
   }, [])
 
-  // Fetch vendors
   useEffect(() => {
     async function fetchVendors() {
       try {
         const res = await fetch(`${API_BASE}/vendors/`)
         if (!res.ok) return
         const data = await res.json()
-        // Deduplicate by name + location_type
         const seen = new Set()
         const deduped = data.filter(v => {
           const key = `${v.name}|${v.location_type}`
@@ -465,8 +409,6 @@ export default function DiningDollars() {
 
   return (
     <div style={st.page}>
-
-      {/* ── Hero ── */}
       <div style={st.hero}>
         <div style={{ position:'absolute',inset:0,backgroundImage:'radial-gradient(circle at 80% 50%,rgba(212,43,43,0.1),transparent 55%)',zIndex:1 }} />
         <div style={{ position:'absolute',inset:0,opacity:0.03,backgroundImage:'radial-gradient(circle,#fff 1px,transparent 1px)',backgroundSize:'22px 22px',zIndex:1 }} />
@@ -481,10 +423,9 @@ export default function DiningDollars() {
             </div>
             <button onClick={() => setShowModal(true)} style={{ ...st.btnRed, alignSelf:'flex-start', marginTop:'4px' }}>+ LOG TRANSACTION</button>
           </div>
-
           <div style={{ display:'grid',gridTemplateColumns:'auto 1fr',gap:'2.5rem',alignItems:'center',marginTop:'2rem',flexWrap:'wrap' }}>
             <div>
-              <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.12em',color:'rgba(255,255,255,0.35)',margin:'0 0 4px' }}>CURRENT BALANCE</p>
+              <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'1.2rem',letterSpacing:'0.12em',color:'rgba(255,255,255,0.35)',margin:'0 0 4px' }}>CURRENT BALANCE</p>
               <p style={{ fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'clamp(2.8rem,6vw,4.5rem)',color:'#fff',lineHeight:1,margin:'0 0 4px' }}>${current.toFixed(0)}</p>
               <div style={{ display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap' }}>
                 <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.8rem',letterSpacing:'0.06em',color:'rgba(255,255,255,0.35)',margin:0 }}>OF ${totalDD} · {pct}% REMAINING</p>
@@ -513,8 +454,6 @@ export default function DiningDollars() {
       </div>
 
       <div style={st.body}>
-
-        {/* ── Weekly budget alert ── */}
         {projWeekly > 0 && dailyBudget > 0 && (() => {
           const dailyProj = projWeekly / 7
           const isOver = dailyBudget < dailyProj * 0.9
@@ -533,10 +472,7 @@ export default function DiningDollars() {
         })()}
 
         <div style={st.twoCol}>
-          {/* ── Left: history + breakdown ── */}
           <div style={{ display:'flex',flexDirection:'column',gap:'1.2rem' }}>
-
-            {/* Weekly pace bars */}
             {projWeekly > 0 && (
               <div style={st.card}>
                 <span style={st.label}>WEEKLY DINING DOLLAR PACE</span>
@@ -549,13 +485,11 @@ export default function DiningDollars() {
                   ))}
                 </div>
                 <div style={{ display:'flex',justifyContent:'space-between' }}>
-                  <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.06em',color:'#9CA3AF' }}>${projWeekly}/WK PROJECTED</span>
-                  <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.06em',color:'#9CA3AF' }}>ACTUAL TRACKING — COMING SOON</span>
+                  <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'1.2rem',letterSpacing:'0.06em',color:'#9CA3AF' }}>${projWeekly}/WK PROJECTED</span>
+                  <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'1.2rem',letterSpacing:'0.06em',color:'#9CA3AF' }}>ACTUAL TRACKING — COMING SOON</span>
                 </div>
               </div>
             )}
-
-            {/* Category breakdown */}
             {catTotals.length > 0 && (
               <div style={st.card}>
                 <span style={st.label}>SPENDING BY CATEGORY</span>
@@ -578,8 +512,6 @@ export default function DiningDollars() {
                 </div>
               </div>
             )}
-
-            {/* Transaction history */}
             <div style={st.card}>
               <span style={st.label}>TRANSACTION HISTORY</span>
               <p style={st.heading}>Recent Transactions</p>
@@ -599,7 +531,7 @@ export default function DiningDollars() {
                           <p style={{ fontFamily:"'Inter',sans-serif",fontWeight:500,fontSize:'0.88rem',color:'#1a1a1a',margin:'0 0 1px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }}>
                             {t.location || cat?.label || 'Transaction'}
                           </p>
-                          <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.84rem',letterSpacing:'0.05em',color:'#9CA3AF',margin:0 }}>{cat?.label} · {t.date}</p>
+                          <p style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:'1.2rem',letterSpacing:'0.05em',color:'#9CA3AF',margin:0 }}>{cat?.label} · {t.date}</p>
                         </div>
                         <span style={{ fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'0.9rem',color:'#D42B2B',flexShrink:0 }}>-${parseFloat(t.amount).toFixed(2)}</span>
                       </div>
@@ -610,7 +542,6 @@ export default function DiningDollars() {
             </div>
           </div>
 
-          {/* ── Right: tips + budget info ── */}
           <div style={{ display:'flex',flexDirection:'column',gap:'1.2rem' }}>
             <div style={st.card}>
               <span style={st.label}>BALANCE OVERVIEW</span>
@@ -628,12 +559,11 @@ export default function DiningDollars() {
                 </div>
               ))}
             </div>
-
             <div style={st.card}>
               <span style={st.label}>MONEY TIPS</span>
               <div style={{ display:'flex',flexDirection:'column',gap:'10px' }}>
                 {[
-                  { bg:'#FBF2D8', border:'rgba(0,0,0,0.08)', title:'Use swipes when you can', body:"Dining hall swipes are often better value than spending dining dollars on the same meal." },
+                  { bg:'#FBF2D8', border:'rgba(0,0,0,0.08)', title:'Use swipes when you can', body:'Dining hall swipes are often better value than spending dining dollars on the same meal.' },
                   { bg:'#f0f7eb', border:'#c8deba', title:'Grocery runs stretch further', body:"Batch shopping 1–2x per week at Star Market or Wollaston's makes your balance last longer." },
                   { bg:'#FFF0EE', border:'#f0b8b8', title:'Watch the weekend spend', body:'Weekends tend to be the biggest spending days. Plan ahead to avoid burning through your balance.' },
                 ].map(({ bg, border, title, body }) => (
@@ -647,13 +577,11 @@ export default function DiningDollars() {
           </div>
         </div>
 
-        {/* ── Vendor Map ── */}
+        {/* Vendor Map */}
         <VendorMap vendors={vendors} profile={profile} />
-
       </div>
 
       {showModal && <LogModal onClose={() => setShowModal(false)} onSave={handleSave} />}
-
       {toast && (
         <div style={{ position:'fixed',bottom:'2rem',left:'50%',transform:'translateX(-50%)',background:'#1a1a1a',color:'#fff',padding:'10px 20px',borderRadius:'99px',fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.82rem',letterSpacing:'0.06em',boxShadow:'0 4px 20px rgba(0,0,0,0.3)',whiteSpace:'nowrap',zIndex:9999,border:'2px solid rgba(255,255,255,0.1)' }}>
           {toast}
