@@ -731,7 +731,7 @@ export default function Home() {
           <div className="team-grid">
             {[1,2,3,4,5].map((n,i) => {
               const tilts = [-4,7,-9,6,-3], hues = [215,285,30,160,0], sats = [55,45,60,50,60], lights = [52,50,50,45,50];
-              const roles = ['Frontend / Design','Backend / Data Analysis','Product / UX','Backend / Data Analysis','Fullstack'];
+              const roles = ['Frontend / Design','Backend / Data Analysis','Product / UX','Backend / Data Analysis','Backend / Data Analysis'];
               const names = ['Naman Patel', 'Callum Johnson', 'Aarav Gandbhir', 'Tan Matalon', 'Emanuel Galindo Garcia'];
               const photos = [
                 nPhoto,
