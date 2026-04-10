@@ -582,7 +582,7 @@ export default function Onboarding() {
                 <label style={st.label}>YOUR DINING PLAN</label>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px'}}>
                   {PLANS.map(plan=>(
-                    <button key={plan.id} type="button" onClick={()=>{ set('planId', plan.id); set('swipesLeft',''); set('diningDollarsLeft','') }} style={{...st.card(answers.planId===plan.id),padding:'10px 12px'}}>
+                    <button key={plan.id} type="button" onClick={()=>{ set('planId', plan.id); set('swipesLeft', plan.swipes === null ? '999' : ''); set('diningDollarsLeft','') }} style={{...st.card(answers.planId===plan.id),padding:'10px 12px'}}>
                       <p style={{fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'0.88rem',color:'#1a1a1a',margin:'0 0 3px'}}>{plan.name}</p>
                       <p style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.65rem',letterSpacing:'0.05em',color:'#9CA3AF',margin:0}}>
                         {plan.swipes===null?'UNLIMITED':plan.swipes+' SWIPES'} · ${plan.diningDollars} DD
@@ -595,18 +595,25 @@ export default function Onboarding() {
                 <>
                   <div>
                     <label style={st.label}>SWIPES REMAINING</label>
-                    <input type="text" inputMode="numeric"
-                      placeholder={maxSwipes < 999 ? `Max ${maxSwipes}` : 'Leave blank if unlimited'}
-                      value={answers.swipesLeft}
-                      onChange={e=>{
-                        const val=e.target.value
-                        if(val===''||/^\d+$/.test(val)){
-                          if(val!==''&&parseInt(val)>maxSwipes){ set('swipesLeft',String(maxSwipes)); return }
-                          set('swipesLeft',val)
-                        }
-                      }}
-                      style={st.input}/>
-                    <p style={st.hint}>Leave blank if you have an unlimited swipes plan.</p>
+                    {selectedPlanForCap?.swipes === null ? (
+                      <div style={{...st.input, background:'#F3F4F6', color:'#9CA3AF', display:'flex', alignItems:'center', justifyContent:'space-between', cursor:'not-allowed'}}>
+                        <span>Unlimited</span>
+                        <span style={{fontFamily:"'Bebas Neue',sans-serif", fontSize:'0.7rem', letterSpacing:'0.06em'}}>UNLIMITED PLAN</span>
+                      </div>
+                    ) : (
+                      <input type="text" inputMode="numeric"
+                        placeholder="e.g. 80"
+                        value={answers.swipesLeft}
+                        onChange={e=>{
+                          const val=e.target.value
+                          if(val===''||/^\d+$/.test(val)){
+                            if(val!==''&&parseInt(val)>maxSwipes){ set('swipesLeft',String(maxSwipes)); return }
+                            set('swipesLeft',val)
+                          }
+                        }}
+                        style={st.input}/>
+                    )}
+                    <p style={st.hint}>Check the GET app for your current swipe count.</p>
                   </div>
                   <div>
                     <label style={st.label}>DINING DOLLARS REMAINING</label>
@@ -690,15 +697,15 @@ export default function Onboarding() {
             </div>
 
             {/* Projections */}
-            {answers.diningDollarsLeft && effDays > 0 && (
+            {answers.diningDollarsLeft && daysRemaining > 0 && (
               <div style={st.summaryCard}>
                 <span style={st.summaryLabel}>WHAT THIS MEANS FOR YOU</span>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px',marginTop:'6px'}}>
                   {[
-                    { val: `$${(parseFloat(answers.diningDollarsLeft)/effDays).toFixed(2)}`, label:'DINING $ / DAY' },
-                    { val: answers.swipesLeft ? `${(parseInt(answers.swipesLeft)/effDays).toFixed(1)}` : '∞', label:'SWIPES / DAY' },
-                    { val: `$${(parseFloat(answers.diningDollarsLeft)/(effDays/7)).toFixed(2)}`, label:'DINING $ / WEEK' },
-                    { val: answers.swipesLeft ? `${Math.round(parseInt(answers.swipesLeft)/(effDays/7))}` : '∞', label:'SWIPES / WEEK' },
+                    { val: `$${(parseFloat(answers.diningDollarsLeft)/daysRemaining).toFixed(2)}`, label:'DINING $ / DAY' },
+                    { val: answers.swipesLeft && answers.swipesLeft !== '999' ? `${(parseInt(answers.swipesLeft)/daysRemaining).toFixed(1)}` : '∞', label:'SWIPES / DAY' },
+                    { val: `$${(parseFloat(answers.diningDollarsLeft)/(daysRemaining/7)).toFixed(2)}`, label:'DINING $ / WEEK' },
+                    { val: answers.swipesLeft && answers.swipesLeft !== '999' ? `${Math.round(parseInt(answers.swipesLeft)/(daysRemaining/7))}` : '∞', label:'SWIPES / WEEK' },
                   ].map(({val,label})=>(
                     <div key={label} style={{background:'#FAF9F6',border:'1.5px solid rgba(0,0,0,0.08)',borderRadius:'8px',padding:'10px 12px',textAlign:'center'}}>
                       <p style={{fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'1.2rem',color:'#1a1a1a',margin:'0 0 2px'}}>{val}</p>
