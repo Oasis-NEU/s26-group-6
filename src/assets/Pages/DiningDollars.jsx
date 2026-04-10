@@ -345,6 +345,7 @@ export default function DiningDollars() {
 
   useEffect(() => {
     const stored = localStorage.getItem('nomnom_profile')
+    if (!stored) { navigate('/onboarding'); return }
     if (stored) try { setProfile(JSON.parse(stored)) } catch {}
   }, [])
 
