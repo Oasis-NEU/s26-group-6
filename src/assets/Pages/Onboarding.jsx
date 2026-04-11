@@ -522,7 +522,9 @@ export default function Onboarding() {
       ? (parseFloat(answers.diningDollarsLeft) || ddStart)
       : ddStart
 
-    const derivedDollarsPerWeek = ddStart && effDays > 0 ? ddStart / (effDays / 7) : null
+    const derivedDollarsPerWeek = answers.dollarsPerWeek
+      ? Math.round(parseFloat(answers.dollarsPerWeek) * 100) / 100
+      : ddStart && effDays > 0 ? Math.round((ddStart / (effDays / 7)) * 100) / 100 : null
 
     await updateMealPlan({
       planName:              planData?.name ?? null,
