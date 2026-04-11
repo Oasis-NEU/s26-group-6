@@ -510,11 +510,17 @@ export default function Onboarding() {
     } : null)
 
     const swipesStart = answers.onPlan
-      ? (answers.swipesLeft ? parseInt(answers.swipesLeft) : null)
+      ? (selectedPlan?.swipes ?? (answers.swipesLeft ? parseInt(answers.swipesLeft) : null))
       : (planData?.swipes ?? null)
+    const swipesCurrent = answers.onPlan
+      ? (answers.swipesLeft ? parseInt(answers.swipesLeft) : swipesStart)
+      : swipesStart
     const ddStart = answers.onPlan
-      ? (parseFloat(answers.diningDollarsLeft) || null)
+      ? (selectedPlan?.diningDollars ?? parseFloat(answers.diningDollarsLeft) ?? null)
       : (planData?.diningDollars ?? null)
+    const ddCurrent = answers.onPlan
+      ? (parseFloat(answers.diningDollarsLeft) || ddStart)
+      : ddStart
 
     const derivedDollarsPerWeek = ddStart && effDays > 0 ? ddStart / (effDays / 7) : null
 
@@ -524,8 +530,8 @@ export default function Onboarding() {
       diningDollarsStart:    ddStart,
       startDate:             answers.semesterStart || null,
       endDate:               answers.semesterEnd || null,
-      swipesCurrent:         swipesStart,
-      diningDollarsCurrent:  ddStart,
+      swipesCurrent,
+      diningDollarsCurrent:  ddCurrent,
       dollarsPerWeek:        derivedDollarsPerWeek,
       dietaryPreferences:    answers.cuisines.length ? answers.cuisines : null,
       dietaryRestrictions:   answers.diet.length ? answers.diet : null,
@@ -537,9 +543,9 @@ export default function Onboarding() {
     // (loadAndStoreUserData may return stale data if the DB write is delayed)
     if (planData?.name)              localStorage.setItem('oasis_plan_name',                 planData.name)
     if (swipesStart != null)         localStorage.setItem('oasis_swipes_start',              swipesStart)
-    if (swipesStart != null)         localStorage.setItem('oasis_swipes_current',            swipesStart)
+    if (swipesCurrent != null)       localStorage.setItem('oasis_swipes_current',            swipesCurrent)
     if (ddStart != null)             localStorage.setItem('oasis_dining_dollars_start',      ddStart)
-    if (ddStart != null)             localStorage.setItem('oasis_dining_dollars_current',    ddStart)
+    if (ddCurrent != null)           localStorage.setItem('oasis_dining_dollars_current',    ddCurrent)
     if (answers.semesterStart)       localStorage.setItem('oasis_start_date',                answers.semesterStart)
     if (answers.semesterEnd)         localStorage.setItem('oasis_end_date',                  answers.semesterEnd)
 
