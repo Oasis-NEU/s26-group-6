@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PhotoReel from '../Components/PhotoReel'
+import { updateMealPlan, getData } from '../Components/APICalls'
 
 const API_BASE = import.meta.env.VITE_API_URL
 
@@ -344,9 +345,22 @@ export default function DiningDollars() {
   const [vendors, setVendors] = useState([])
 
   useEffect(() => {
-    const stored = localStorage.getItem('nomnom_profile')
-    if (!stored) { navigate('/onboarding'); return }
-    if (stored) try { setProfile(JSON.parse(stored)) } catch {}
+    if (!localStorage.getItem('sw_logged_in')) { navigate('/login'); return }
+    const nomnom = JSON.parse(localStorage.getItem('nomnom_profile') || '{}')
+    setProfile({
+      planData: {
+        name:          localStorage.getItem('oasis_plan_name'),
+        swipes:        localStorage.getItem('oasis_swipes_start') ? parseInt(localStorage.getItem('oasis_swipes_start')) : null,
+        diningDollars: parseFloat(localStorage.getItem('oasis_dining_dollars_start')) || 0,
+      },
+      diningDollarsLeft: localStorage.getItem('oasis_dining_dollars_current'),
+      semesterStart:     localStorage.getItem('oasis_start_date'),
+      semesterEnd:       localStorage.getItem('oasis_end_date'),
+      semesterBreaks:    nomnom.semesterBreaks || [],
+      customOffDays:     nomnom.customOffDays  || [],
+      semesterPreset:    nomnom.semesterPreset || null,
+      dollarsPerWeek:    nomnom.dollarsPerWeek || null,
+    })
   }, [])
 
   useEffect(() => {

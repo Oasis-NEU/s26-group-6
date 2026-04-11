@@ -1,6 +1,39 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { login, register } from '../Components/APICalls'
+import { login, register, getData } from '../Components/APICalls'
+
+export async function loadAndStoreUserData() {
+  const [mealPlanRes, userRes] = await Promise.all([
+    getData({
+      columnList: ['plan_name', 'swipes_start', 'dining_dollars_start', 'start_date', 'end_date', 'swipes_current', 'dining_dollars_current'],
+      tableName: 'meal_plans'
+    }),
+    getData({
+      columnList: ['dietary_preferences', 'dietary_restrictions'],
+      tableName: 'users'
+    })
+  ])
+  const mealPlan = (await mealPlanRes.json())?.data?.[0] || {}
+  const user = (await userRes.json())?.data?.[0] || {}
+
+  const fields = {
+    oasis_plan_name:                mealPlan.plan_name ?? null,
+    oasis_swipes_start:             mealPlan.swipes_start ?? null,
+    oasis_dining_dollars_start:     mealPlan.dining_dollars_start ?? null,
+    oasis_start_date:               mealPlan.start_date ?? null,
+    oasis_end_date:                 mealPlan.end_date ?? null,
+    oasis_swipes_current:           mealPlan.swipes_current ?? null,
+    oasis_dining_dollars_current:   mealPlan.dining_dollars_current ?? null,
+    oasis_dietary_preferences:      user.dietary_preferences ? JSON.stringify(user.dietary_preferences) : null,
+    oasis_dietary_restrictions:     user.dietary_restrictions ?? null,
+  }
+
+  for (const [key, value] of Object.entries(fields)) {
+    if (value !== null) localStorage.setItem(key, value)
+  }
+
+  return fields
+}
 
 const inputCls = {
   width: '100%',
@@ -90,6 +123,8 @@ export default function Login() {
         return setSignUpError('Account created! Please sign in manually.')
       }
 
+      const loginData = await loginResponse.json()
+      localStorage.setItem('oasis_token', loginData.token_str)
       localStorage.setItem('sw_logged_in', 'true')
       setSignUpSuccess('Account created! Redirecting...')
       setTimeout(() => navigate('/onboarding'), 1000)
@@ -117,12 +152,23 @@ export default function Login() {
       if (!loginResponse || !loginResponse.ok) {
         return setSignInError("Incorrect email or password. If you don't have an account yet, sign up first.")
       }
+      const loginData = await loginResponse.json()
+      localStorage.setItem('oasis_token', loginData.token_str)
       localStorage.setItem('sw_logged_in', 'true')
-      navigate('/onboarding')
     } catch (err) {
-      setSignInError("Incorrect email or password. If you don't have an account yet, sign up first.")
+      return setSignInError("Incorrect email or password. If you don't have an account yet, sign up first.")
     } finally {
       setLoading(false)
+    }
+
+    try {
+      const profile = await loadAndStoreUserData()
+      if (!profile.oasis_end_date) {
+        return navigate('/onboarding')
+      }
+      navigate('/dashboard')
+    } catch (err) {
+      navigate('/dashboard')
     }
   }
 

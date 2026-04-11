@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PhotoReel from '../Components/PhotoReel'
+import { updateMealPlan, getData } from '../Components/APICalls'
 
 function parseDate(str) { return str ? new Date(str + 'T12:00:00') : null }
 function daysUntil(str) {
@@ -97,9 +98,23 @@ export default function Swipes() {
   const [toast, setToast] = useState(null)
 
   useEffect(() => {
-    const stored = localStorage.getItem('nomnom_profile')
-    if (!stored) { navigate('/onboarding'); return }
-    if (stored) try { setProfile(JSON.parse(stored)) } catch {}
+    if (!localStorage.getItem('sw_logged_in')) { navigate('/login'); return }
+    const nomnom = JSON.parse(localStorage.getItem('nomnom_profile') || '{}')
+    setProfile({
+      planData: {
+        name:          localStorage.getItem('oasis_plan_name'),
+        swipes:        localStorage.getItem('oasis_swipes_start') ? parseInt(localStorage.getItem('oasis_swipes_start')) : null,
+        diningDollars: parseFloat(localStorage.getItem('oasis_dining_dollars_start')) || 0,
+      },
+      swipesLeft:     localStorage.getItem('oasis_swipes_current'),
+      semesterStart:  localStorage.getItem('oasis_start_date'),
+      semesterEnd:    localStorage.getItem('oasis_end_date'),
+      semesterBreaks: nomnom.semesterBreaks || [],
+      customOffDays:  nomnom.customOffDays  || [],
+      semesterPreset: nomnom.semesterPreset || null,
+      swipesAmt:      nomnom.swipesAmt      || null,
+      swipesPeriod:   nomnom.swipesPeriod   || 'week',
+    })
   }, [])
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(null), 3000) }

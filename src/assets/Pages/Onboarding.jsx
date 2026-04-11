@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { updateMealPlan, updateUserInfo } from '../Components/APICalls'
+import { loadAndStoreUserData } from './Login'
 
 const PLANS = [
-  { id: 'unlimited', name: 'NU – Unlimited', price: 4450, swipes: null, diningDollars: 400, guestPasses: 10, tag: 'Most Flexible' },
+  { id: 'unlimited', name: 'NU – Unlimited', price: 4450, swipes: 999, diningDollars: 400, guestPasses: 10, tag: 'Most Flexible' },
   { id: '225',       name: 'NU – 225',       price: 4450, swipes: 225,  diningDollars: 600, guestPasses: 10, tag: 'Most Popular' },
   { id: '180',       name: 'NU – 180',       price: 3935, swipes: 180,  diningDollars: 300, guestPasses: 10, tag: null },
   { id: '150',       name: 'NU – 150',       price: 3465, swipes: 150,  diningDollars: 200, guestPasses: 10, tag: null },
@@ -507,13 +509,39 @@ export default function Onboarding() {
   const projSwipes = Math.round((parseInt(answers.swipesAmt)||0) * (effDays/7))
   const selectedPlan = PLANS.find(p => p.id === answers.planId)
 
-  const finish = () => {
+  const finish = async () => {
     const planData = selectedPlan || (answers.onPlan ? {
       id: 'custom', name: 'My Dining Plan', price: 0, guestPasses: 10,
       swipes: answers.swipesLeft ? parseInt(answers.swipesLeft) : null,
       diningDollars: parseFloat(answers.diningDollarsLeft) || 0,
       tag: null,
     } : null)
+
+    const swipesStart = answers.onPlan
+      ? (answers.swipesLeft ? parseInt(answers.swipesLeft) : null)
+      : (planData?.swipes ?? null)
+    const ddStart = answers.onPlan
+      ? (parseFloat(answers.diningDollarsLeft) || null)
+      : (planData?.diningDollars ?? null)
+
+    await Promise.all([
+      updateMealPlan({
+        planName:              planData?.name ?? null,
+        swipesStart,
+        diningDollarsStart:    ddStart,
+        startDate:             answers.semesterStart || null,
+        endDate:               answers.semesterEnd || null,
+        swipesCurrent:         swipesStart,
+        diningDollarsCurrent:  ddStart,
+      }),
+      updateUserInfo({
+        dietaryPreferences: answers.cuisines.length ? answers.cuisines : null,
+        dietaryRestrictions: answers.diet.length ? answers.diet.join(', ') : null,
+      }),
+    ])
+
+    await loadAndStoreUserData()
+
     localStorage.setItem('nomnom_profile', JSON.stringify({
       ...answers,
       planData,

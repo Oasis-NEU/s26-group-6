@@ -247,9 +247,24 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const stored = localStorage.getItem('nomnom_profile')
-    if (!stored) { navigate('/onboarding'); return }
-    try { setProfile(JSON.parse(stored)) } catch { navigate('/onboarding'); return }
+    if (!localStorage.getItem('sw_logged_in')) { navigate('/login'); return }
+    const nomnom = JSON.parse(localStorage.getItem('nomnom_profile') || '{}')
+    setProfile({
+      planData: {
+        name:          localStorage.getItem('oasis_plan_name'),
+        swipes:        localStorage.getItem('oasis_swipes_start') ? parseInt(localStorage.getItem('oasis_swipes_start')) : null,
+        diningDollars: parseFloat(localStorage.getItem('oasis_dining_dollars_start')) || 0,
+      },
+      swipesLeft:        localStorage.getItem('oasis_swipes_current'),
+      diningDollarsLeft: localStorage.getItem('oasis_dining_dollars_current'),
+      semesterStart:     localStorage.getItem('oasis_start_date'),
+      semesterEnd:       localStorage.getItem('oasis_end_date'),
+      semesterBreaks:    nomnom.semesterBreaks  || [],
+      customOffDays:     nomnom.customOffDays   || [],
+      semesterPreset:    nomnom.semesterPreset  || null,
+      dollarsPerWeek:    nomnom.dollarsPerWeek  || null,
+      projections:       nomnom.projections     || null,
+    })
     setLoading(false)
   }, [navigate])
 
