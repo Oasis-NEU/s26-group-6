@@ -75,7 +75,7 @@ function DishCard({ item, userDiet, userAllergens }) {
   const color = calColor(cal)
   const n = item.nutrients || {}
   const hasNutrients = Object.keys(n).length > 0
-  const tags = item.tags || []
+  const tags = (item.tags || []).filter(t => t !== 'Good Friendly')
   const allergens = [...(item.allergens || []), ...(item.allergens_major || [])]
 
   const itemAllergenNorms = allergens.map(a => norm(a.replace('*', '')))
