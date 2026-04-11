@@ -353,8 +353,8 @@ export default function Swipes() {
                 </div>
               ) : (
                 [
-                  { label:'Starting Swipes', value: startingSwipes, muted:true },
-                  { label:'Used So Far',     value: `-${used}`,     muted:false, red:true },
+                  { label:'Starting Swipes', value: totalSwipes,              muted:true },
+                  { label:'Used So Far',     value: `-${totalSwipes - current}`, muted:false, red:true },
                   { label:'Remaining',       value: current,        muted:false, bold:true },
                   { label:'Active Days Left',value: activeDaysLeft ?? '—', muted:true },
                   { label:'Swipes/Day Left', value: dailyRate > 0 ? dailyRate.toFixed(1) : '—', muted:true },
