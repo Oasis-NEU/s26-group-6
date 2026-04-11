@@ -41,7 +41,6 @@ const CUISINE_OPTIONS = ['American', 'Mexican', 'Thai', 'Mediterranean', 'Middle
 const ALLERGEN_OPTIONS = ['Peanuts', 'Tree Nuts', 'Shellfish', 'Fish', 'Eggs', 'Milk / Dairy', 'Soy', 'Wheat / Gluten', 'Sesame', 'Coconut']
 const DINING_STYLE_OPTIONS = ['Quick grab & go', 'Sit-down meal', 'Coffee & cafe runs', 'Grocery & meal prep', 'Late night eats', 'Breakfast spots']
 const FOOD_TYPE_OPTIONS = ['Bowls & salads', 'Sandwiches & wraps', 'Burgers & wings', 'Burritos & tacos', 'Noodles & rice', 'Sushi & poke', 'Bakery & pastries', 'Bubble tea & drinks', 'Smoothies & juices']
-const SPICE_OPTIONS = ['None', 'Mild', 'Medium', 'Spicy', 'Extra Spicy']
 const PORTION_OPTIONS = ['Small', 'Regular', 'Large']
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December']
 
@@ -427,13 +426,6 @@ function PreferencesStep({ answers, toggleArr, set, onBack, onNext, step, isNewP
       </div>
       <div style={{display:'flex',flexWrap:'wrap',gap:'8px',marginBottom:'0.5rem'}}>{DINING_STYLE_OPTIONS.map(opt=><Chip key={opt} label={opt} selected={(answers.diningStyle||[]).includes(opt)} onToggle={()=>toggleArr('diningStyle',opt)}/>)}</div>
       <div style={{display:'flex',alignItems:'center',gap:'6px',margin:'1.4rem 0 0.7rem'}}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21 C9 21 6 18 6 14 C6 10 8.5 8 10 6 C10 6 9.2 10 12 11 C12 11 10.5 8 14 6 C16 8 18 10.5 18 14 C18 18 15 21 12 21Z" stroke="#9CA3AF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        <span style={{...st.sectionLabel,margin:0,display:'inline'}}>SPICE PREFERENCE</span>
-      </div>
-      <div style={{display:'flex',gap:'8px',flexWrap:'wrap',marginBottom:'0.5rem'}}>
-        {SPICE_OPTIONS.map(opt=><button key={opt} type="button" onClick={()=>set('spiceLevel',opt)} style={{...st.chip(answers.spiceLevel===opt),marginBottom:0}}>{opt}</button>)}
-      </div>
-      <div style={{display:'flex',alignItems:'center',gap:'6px',margin:'1.4rem 0 0.7rem'}}>
         <span style={{...st.sectionLabel,margin:0,display:'inline'}}>PORTION SIZE</span>
       </div>
       <div style={{display:'flex'}}>
@@ -485,7 +477,7 @@ export default function Onboarding() {
     semesterPreset: null, semesterStart: '', semesterEnd: '2026-04-26',
     semesterBreaks: [], customOffDays: [],
     diet: [], cuisines: [], allergens: [], diningStyle: [], foodTypes: [],
-    spiceLevel: '', portionSize: '',
+    portionSize: '',
     swipesAmt: '', swipesPeriod: 'week', dollarsPerWeek: '',
   })
 
@@ -621,7 +613,7 @@ export default function Onboarding() {
                 <label style={st.label}>YOUR DINING PLAN</label>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px'}}>
                   {PLANS.map(plan=>(
-                    <button key={plan.id} type="button" onClick={()=>{ set('planId', plan.id); set('swipesLeft',''); set('diningDollarsLeft','') }} style={{...st.card(answers.planId===plan.id),padding:'10px 12px'}}>
+                    <button key={plan.id} type="button" onClick={()=>{ set('planId', plan.id); set('swipesLeft', plan.swipes === null ? '999' : ''); set('diningDollarsLeft','') }} style={{...st.card(answers.planId===plan.id),padding:'10px 12px'}}>
                       <p style={{fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'0.88rem',color:'#1a1a1a',margin:'0 0 3px'}}>{plan.name}</p>
                       <p style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.65rem',letterSpacing:'0.05em',color:'#9CA3AF',margin:0}}>
                         {plan.swipes===null?'UNLIMITED':plan.swipes+' SWIPES'} · ${plan.diningDollars} DD
@@ -634,18 +626,25 @@ export default function Onboarding() {
                 <>
                   <div>
                     <label style={st.label}>SWIPES REMAINING</label>
-                    <input type="text" inputMode="numeric"
-                      placeholder={maxSwipes < 999 ? `Max ${maxSwipes}` : 'Leave blank if unlimited'}
-                      value={answers.swipesLeft}
-                      onChange={e=>{
-                        const val=e.target.value
-                        if(val===''||/^\d+$/.test(val)){
-                          if(val!==''&&parseInt(val)>maxSwipes){ set('swipesLeft',String(maxSwipes)); return }
-                          set('swipesLeft',val)
-                        }
-                      }}
-                      style={st.input}/>
-                    <p style={st.hint}>Leave blank if you have an unlimited swipes plan.</p>
+                    {selectedPlanForCap?.swipes === null ? (
+                      <div style={{...st.input, background:'#F3F4F6', color:'#9CA3AF', display:'flex', alignItems:'center', justifyContent:'space-between', cursor:'not-allowed'}}>
+                        <span>Unlimited</span>
+                        <span style={{fontFamily:"'Bebas Neue',sans-serif", fontSize:'0.7rem', letterSpacing:'0.06em'}}>UNLIMITED PLAN</span>
+                      </div>
+                    ) : (
+                      <input type="text" inputMode="numeric"
+                        placeholder="e.g. 80"
+                        value={answers.swipesLeft}
+                        onChange={e=>{
+                          const val=e.target.value
+                          if(val===''||/^\d+$/.test(val)){
+                            if(val!==''&&parseInt(val)>maxSwipes){ set('swipesLeft',String(maxSwipes)); return }
+                            set('swipesLeft',val)
+                          }
+                        }}
+                        style={st.input}/>
+                    )}
+                    <p style={st.hint}>Check the GET app for your current swipe count.</p>
                   </div>
                   <div>
                     <label style={st.label}>DINING DOLLARS REMAINING</label>
@@ -729,15 +728,15 @@ export default function Onboarding() {
             </div>
 
             {/* Projections */}
-            {answers.diningDollarsLeft && effDays > 0 && (
+            {answers.diningDollarsLeft && daysRemaining > 0 && (
               <div style={st.summaryCard}>
                 <span style={st.summaryLabel}>WHAT THIS MEANS FOR YOU</span>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px',marginTop:'6px'}}>
                   {[
-                    { val: `$${(parseFloat(answers.diningDollarsLeft)/effDays).toFixed(2)}`, label:'DINING $ / DAY' },
-                    { val: answers.swipesLeft ? `${(parseInt(answers.swipesLeft)/effDays).toFixed(1)}` : '∞', label:'SWIPES / DAY' },
-                    { val: `$${(parseFloat(answers.diningDollarsLeft)/(effDays/7)).toFixed(2)}`, label:'DINING $ / WEEK' },
-                    { val: answers.swipesLeft ? `${Math.round(parseInt(answers.swipesLeft)/(effDays/7))}` : '∞', label:'SWIPES / WEEK' },
+                    { val: `$${(parseFloat(answers.diningDollarsLeft)/daysRemaining).toFixed(2)}`, label:'DINING $ / DAY' },
+                    { val: answers.swipesLeft && answers.swipesLeft !== '999' ? `${(parseInt(answers.swipesLeft)/daysRemaining).toFixed(1)}` : '∞', label:'SWIPES / DAY' },
+                    { val: `$${(parseFloat(answers.diningDollarsLeft)/(daysRemaining/7)).toFixed(2)}`, label:'DINING $ / WEEK' },
+                    { val: answers.swipesLeft && answers.swipesLeft !== '999' ? `${Math.round(parseInt(answers.swipesLeft)/(daysRemaining/7))}` : '∞', label:'SWIPES / WEEK' },
                   ].map(({val,label})=>(
                     <div key={label} style={{background:'#FAF9F6',border:'1.5px solid rgba(0,0,0,0.08)',borderRadius:'8px',padding:'10px 12px',textAlign:'center'}}>
                       <p style={{fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'1.2rem',color:'#1a1a1a',margin:'0 0 2px'}}>{val}</p>
@@ -756,7 +755,6 @@ export default function Onboarding() {
                   {[...answers.diet,...answers.allergens,...answers.cuisines,...(answers.foodTypes||[]),...(answers.diningStyle||[])].map(tag=>(
                     <span key={tag} style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.7rem',letterSpacing:'0.06em',padding:'3px 10px',borderRadius:'99px',background:'#FFE45C',border:'1.5px solid #1a1a1a',color:'#1a1a1a'}}>{tag}</span>
                   ))}
-                  {answers.spiceLevel && <span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.7rem',letterSpacing:'0.06em',padding:'3px 10px',borderRadius:'99px',background:'#FBF2D8',border:'1.5px solid #1a1a1a',color:'#1a1a1a'}}>{answers.spiceLevel} SPICE</span>}
                   {answers.portionSize && <span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.7rem',letterSpacing:'0.06em',padding:'3px 10px',borderRadius:'99px',background:'#FBF2D8',border:'1.5px solid #1a1a1a',color:'#1a1a1a'}}>{answers.portionSize} PORTIONS</span>}
                 </div>
               </div>
@@ -893,7 +891,6 @@ export default function Onboarding() {
                   {[...answers.diet,...answers.allergens,...answers.cuisines,...(answers.foodTypes||[]),...(answers.diningStyle||[])].map(tag=>(
                     <span key={tag} style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.7rem',letterSpacing:'0.06em',padding:'3px 10px',borderRadius:'99px',background:'#FFE45C',border:'1.5px solid #1a1a1a',color:'#1a1a1a'}}>{tag}</span>
                   ))}
-                  {answers.spiceLevel && <span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.7rem',letterSpacing:'0.06em',padding:'3px 10px',borderRadius:'99px',background:'#FBF2D8',border:'1.5px solid #1a1a1a',color:'#1a1a1a'}}>{answers.spiceLevel} SPICE</span>}
                   {answers.portionSize && <span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:'0.7rem',letterSpacing:'0.06em',padding:'3px 10px',borderRadius:'99px',background:'#FBF2D8',border:'1.5px solid #1a1a1a',color:'#1a1a1a'}}>{answers.portionSize} PORTIONS</span>}
                 </div>
               </div>
