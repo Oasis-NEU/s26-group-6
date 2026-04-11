@@ -526,6 +526,8 @@ export default function Onboarding() {
       ? Math.round(parseFloat(answers.dollarsPerWeek) * 100) / 100
       : ddStart && effDays > 0 ? Math.round((ddStart / (effDays / 7)) * 100) / 100 : null
 
+    const allOffDays = [...new Set([...getBreakOffDays(answers.semesterBreaks || []), ...(answers.customOffDays || [])])]
+
     await updateMealPlan({
       planName:              planData?.name ?? null,
       swipesStart,
@@ -535,6 +537,7 @@ export default function Onboarding() {
       swipesCurrent,
       diningDollarsCurrent:  ddCurrent,
       dollarsPerWeek:        derivedDollarsPerWeek,
+      offdays:               allOffDays.length ? allOffDays : null,
       dietaryPreferences:    answers.cuisines.length ? answers.cuisines : null,
       dietaryRestrictions:   answers.diet.length ? answers.diet : null,
     })
@@ -550,6 +553,7 @@ export default function Onboarding() {
     if (ddCurrent != null)           localStorage.setItem('oasis_dining_dollars_current',    ddCurrent)
     if (answers.semesterStart)       localStorage.setItem('oasis_start_date',                answers.semesterStart)
     if (answers.semesterEnd)         localStorage.setItem('oasis_end_date',                  answers.semesterEnd)
+    if (allOffDays.length)           localStorage.setItem('oasis_offdays',                   JSON.stringify(allOffDays))
 
     localStorage.setItem('nomnom_profile', JSON.stringify({
       allergens:    answers.allergens,

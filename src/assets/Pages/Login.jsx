@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { login, register, getData } from '../Components/APICalls'
+import { login, register, getData, updateMealPlan } from '../Components/APICalls'
 
 export async function loadAndStoreUserData() {
   const mealPlanRes = await getData({
@@ -131,7 +131,30 @@ export default function Login() {
       localStorage.setItem('oasis_token', loginData.token_str)
       localStorage.setItem('sw_logged_in', 'true')
       setSignUpSuccess('Account created! Redirecting...')
-      setTimeout(() => navigate('/onboarding'), 1000)
+
+      // If the user already completed onboarding before signing up, push that
+      // data to the DB and go straight to the dashboard instead of re-onboarding.
+      const hasOnboardingData = !!localStorage.getItem('oasis_end_date')
+      if (hasOnboardingData) {
+        const ls = (key) => localStorage.getItem(key)
+        await updateMealPlan({
+          planName:             ls('oasis_plan_name'),
+          swipesStart:          ls('oasis_swipes_start') ? parseInt(ls('oasis_swipes_start')) : null,
+          swipesCurrent:        ls('oasis_swipes_current') ? parseInt(ls('oasis_swipes_current')) : null,
+          diningDollarsStart:   ls('oasis_dining_dollars_start') ? parseFloat(ls('oasis_dining_dollars_start')) : null,
+          diningDollarsCurrent: ls('oasis_dining_dollars_current') ? parseFloat(ls('oasis_dining_dollars_current')) : null,
+          startDate:            ls('oasis_start_date'),
+          endDate:              ls('oasis_end_date'),
+          swipesPerWeek:        ls('oasis_swipes_per_week') ? parseInt(ls('oasis_swipes_per_week')) : null,
+          dollarsPerWeek:       ls('oasis_dollars_per_week') ? parseFloat(ls('oasis_dollars_per_week')) : null,
+          offdays:              ls('oasis_offdays') ? JSON.parse(ls('oasis_offdays')) : null,
+          dietaryPreferences:   ls('oasis_dietary_preferences') ? JSON.parse(ls('oasis_dietary_preferences')) : null,
+          dietaryRestrictions:  ls('oasis_dietary_restrictions') ? JSON.parse(ls('oasis_dietary_restrictions')) : null,
+        }).catch(() => {})
+        setTimeout(() => navigate('/dashboard'), 1000)
+      } else {
+        setTimeout(() => navigate('/onboarding'), 1000)
+      }
     } catch (err) {
       setSignUpError('You already have an account with this email. Sign in instead.')
     } finally {
